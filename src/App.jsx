@@ -67,18 +67,51 @@ const sustain360Results = [
 ];
 
 const arbortagProblems = [
-  'Manual tree measurements are slow and inconsistent',
-  'Difficulty proving carbon sequestration claims',
-  'No standardized way to track tree growth',
-  'Challenges in geo-tagging plantations'
+  'Environmental data collection is outdated and manual',
+  'Tree audits are slow, inconsistent, and often inaccurate',
+  'Corporates struggle to verify CSR plantations',
+  'Governments lack reliable ground truth for carbon offset reporting'
 ];
 
 const arbortagResults = [
   'Complete plantation inventory digitized in days',
-  'Accurate carbon sequestration data',
-  'Automated reporting for CSR disclosures',
-  'Real-time tracking of tree health'
+  'Accurate carbon sequestration data with AI precision',
+  'Tamper-proof data with blockchain logging',
+  'Integrated ESG dashboards for audit-ready reports'
 ];
+
+const arbortagFeatures = [
+  { title: 'Smart Tagging with AI Vision', description: 'Instantly identifies and verifies each tree using ArUco-based markers.' },
+  { title: 'Real-time Growth Tracking', description: 'Monitors height, canopy spread, and health indicators continuously.' },
+  { title: 'Geo-Fencing & Mapping', description: 'Create accurate digital boundaries of plantations and forest assets.' },
+  { title: 'Seamless Data Integration', description: 'Syncs directly with Sustain360™ for carbon and biodiversity reporting.' },
+  { title: 'Offline Mode + Cloud Sync', description: 'Works in remote terrains — uploads when reconnected.' }
+];
+
+const arbortagAdvantages = [
+  'Zero manual dependency — completely automated verification',
+  'High accuracy using AI + GIS synergy',
+  'Scalable from small plantations to large urban forests',
+  'Tamper-proof data — every tag, timestamp, and image is blockchain-logged',
+  'Integrated ESG dashboards for audit-ready sustainability reports'
+];
+
+const arbortagUseCases = [
+  'Corporate CSR plantations & ESG reporting',
+  'Urban forest management',
+  'Carbon credit validation',
+  'Smart campus sustainability programs',
+  'Government reforestation tracking'
+];
+
+// ============================================
+// DEMO URLS - Configure your external demo links here
+// ============================================
+const DEMO_URLS = {
+  main: 'https://carbondesk-live.vercel.app/',
+  sustain360: 'https://carbondesk-live.vercel.app/',
+  arbortag: 'https://youtu.be/p0iGDVh6q2o'
+};
 
 // ============================================
 // ICONS
@@ -119,6 +152,12 @@ const QuoteIcon = ({ className = "w-12 h-12" }) => (
   </svg>
 );
 
+const TreeIcon = ({ className = "w-6 h-6" }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M12 22v-7m0 0l-4-4m4 4l4-4M12 3L8 8h8l-4-5zM6 13h12l-6-5-6 5z"/>
+  </svg>
+);
+
 // ============================================
 // COMPONENTS
 // ============================================
@@ -141,11 +180,17 @@ const Header = () => {
     { id: 'contact', label: 'Contact' }
   ];
 
+  // Determine if we're on a page with dark hero (home, sustain360, arbortag)
+  const isDarkHero = ['home', 'sustain360', 'arbortag'].includes(currentPage);
+  const useWhiteText = isDarkHero && !scrolled;
+
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
       scrolled 
         ? 'bg-white/95 backdrop-blur-md shadow-lg shadow-emerald-900/5' 
-        : 'bg-transparent'
+        : isDarkHero 
+          ? 'bg-emerald-900/20 backdrop-blur-sm' 
+          : 'bg-transparent'
     }`}>
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
@@ -154,40 +199,58 @@ const Header = () => {
             onClick={() => setCurrentPage('home')}
             className="flex items-center gap-3 group"
           >
-            <div className="w-10 h-10 bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-xl flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300">
-              <LeafIcon className="w-6 h-6 text-white" />
-            </div>
-            <span className="text-xl font-semibold text-emerald-900 tracking-tight">
-              NatureMark
+            <img 
+              src="/images/logo.svg" 
+              alt="NatureMark Systems" 
+              className="h-10 w-auto object-contain"
+            />
+            <span className={`text-xl font-semibold tracking-tight ${
+              useWhiteText ? 'text-white' : 'text-emerald-900'
+            }`}>
+              NatureMark Systems
             </span>
           </button>
 
           {/* Navigation */}
           <nav className="hidden md:flex items-center gap-1">
-            {navItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => setCurrentPage(item.id)}
-                className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
-                  currentPage === item.id || 
-                  (item.id === 'products' && ['sustain360', 'arbortag'].includes(currentPage))
-                    ? 'bg-emerald-900 text-white shadow-lg shadow-emerald-900/20'
-                    : 'text-emerald-800 hover:bg-emerald-50'
-                }`}
-              >
-                {item.label}
-              </button>
-            ))}
+            {navItems.map((item) => {
+              const isActive = currentPage === item.id || 
+                (item.id === 'products' && ['sustain360', 'arbortag'].includes(currentPage));
+              
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => setCurrentPage(item.id)}
+                  className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
+                    isActive
+                      ? useWhiteText 
+                        ? 'bg-white text-emerald-900 shadow-lg' 
+                        : 'bg-emerald-900 text-white shadow-lg shadow-emerald-900/20'
+                      : useWhiteText
+                        ? 'text-white hover:bg-white/10'
+                        : 'text-emerald-800 hover:bg-emerald-50'
+                  }`}
+                >
+                  {item.label}
+                </button>
+              );
+            })}
           </nav>
 
-          {/* CTA Button */}
-          <button 
-            onClick={() => setCurrentPage('contact')}
-            className="hidden md:flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-emerald-600 to-emerald-700 text-white rounded-full text-sm font-medium hover:shadow-lg hover:shadow-emerald-600/30 transform hover:-translate-y-0.5 transition-all duration-300"
+          {/* CTA Button - Try Demo */}
+          <a 
+            href={DEMO_URLS.main}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`hidden md:flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-medium transform hover:-translate-y-0.5 transition-all duration-300 ${
+              useWhiteText
+                ? 'bg-white text-emerald-900 hover:shadow-lg hover:shadow-white/30'
+                : 'bg-gradient-to-r from-emerald-600 to-emerald-700 text-white hover:shadow-lg hover:shadow-emerald-600/30'
+            }`}
           >
-            Get Started
+            Try Demo
             <ArrowRightIcon className="w-4 h-4" />
-          </button>
+          </a>
         </div>
       </div>
     </header>
@@ -807,14 +870,14 @@ const ProductsPage = () => {
               <img src="/images/arbortag-preview.png" alt="ArborTag" className="w-full h-full object-cover" onError={(e) => { e.target.style.display = 'none' }} />
             </div>
             <div className="lg:order-1">
-              <span className="inline-block px-3 py-1 bg-teal-100 text-teal-700 rounded-full text-sm mb-4">Tree Monitoring</span>
+              <span className="inline-block px-3 py-1 bg-teal-100 text-teal-700 rounded-full text-sm mb-4">Tree Intelligence</span>
               <h2 className="text-4xl font-bold text-emerald-900 mb-4">ArborTag</h2>
               <p className="text-lg text-teal-600 mb-4">Measure. Monitor. Sustain</p>
               <p className="text-slate-600 mb-6 leading-relaxed">
-                An innovative tree measurement and monitoring solution using computer vision and AI to accurately track plantation health and carbon sequestration.
+                A smart, AI-driven monitoring system that makes every tree measurable, traceable, and report-ready. ArborTag combines precision hardware, AI-based image analytics, and secure geotagging.
               </p>
               <ul className="space-y-3 mb-8">
-                {['Smartphone-based tree measurement', 'ArUco marker technology', 'Geo-tagging & tracking', 'Carbon sequestration calculation'].map((item) => (
+                {['Smart tagging with AI vision', 'Real-time growth tracking', 'Geo-fencing & mapping', 'Carbon sequestration calculation'].map((item) => (
                   <li key={item} className="flex items-center gap-3">
                     <CheckIcon className="w-5 h-5 text-teal-600" />
                     <span className="text-slate-600">{item}</span>
@@ -854,25 +917,15 @@ const ProductsPage = () => {
   );
 };
 
-// Product Detail Page Component
-const ProductDetailPage = ({ product }) => {
+// Sustain360 Product Detail Page
+const Sustain360Page = () => {
   const { setCurrentPage } = useApp();
-  const isSustain360 = product === 'sustain360';
-  
-  const data = {
-    name: isSustain360 ? 'Sustain360' : 'ArborTag',
-    tagline: isSustain360 ? 'Enterprise Carbon Intelligence Platform' : 'Measure. Monitor. Sustain',
-    problems: isSustain360 ? sustain360Problems : arbortagProblems,
-    results: isSustain360 ? sustain360Results : arbortagResults,
-    demoUrl: isSustain360 ? 'https://sustain360.naturemarksystems.com' : 'https://youtu.be/p0iGDVh6q2o',
-    gradient: isSustain360 ? 'from-emerald-600 to-emerald-800' : 'from-teal-600 to-emerald-700'
-  };
 
   const sections = [
     { id: 'what-we-do', label: 'What we do' },
     { id: 'problem', label: 'The Problem' },
     { id: 'solution', label: 'Our Solution' },
-    { id: 'why', label: `Why ${data.name}` },
+    { id: 'why', label: 'Why Sustain360' },
     { id: 'results', label: 'Results' }
   ];
 
@@ -882,28 +935,39 @@ const ProductDetailPage = ({ product }) => {
 
   return (
     <main className="pt-20">
-      {/* Hero */}
-      <section className={`py-24 bg-gradient-to-br ${isSustain360 ? 'from-emerald-50 to-teal-50' : 'from-teal-50 to-emerald-50'}`}>
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center">
-          <div className={`w-24 h-24 bg-gradient-to-br ${data.gradient} rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-xl`}>
-            <LeafIcon className="w-12 h-12 text-white" />
+      {/* Hero Section */}
+      <section className="relative min-h-[70vh] flex items-center overflow-hidden">
+        {/* Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-emerald-900 via-emerald-800 to-teal-900">
+          <img 
+            src="/images/sustain360-hero-bg.jpg" 
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover opacity-30 mix-blend-overlay"
+            onError={(e) => { e.target.style.display = 'none' }}
+          />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-emerald-500/20 via-transparent to-transparent" />
+        </div>
+        
+        <div className="relative max-w-5xl mx-auto px-6 lg:px-8 py-24 text-center w-full">
+          <div className="w-20 h-20 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-8 border border-white/20">
+            <LeafIcon className="w-10 h-10 text-emerald-300" />
           </div>
-          <h1 className="text-5xl lg:text-6xl font-bold text-emerald-900 mb-4">
-            {data.name}
+          <h1 className="text-5xl lg:text-6xl font-bold text-white mb-4">
+            Sustain360
           </h1>
-          <p className="text-xl text-slate-600 mb-8">{data.tagline}</p>
+          <p className="text-xl text-emerald-200 mb-10 max-w-2xl mx-auto">Enterprise Carbon Intelligence Platform</p>
           <div className="flex flex-wrap justify-center gap-4">
             <button
               onClick={() => setCurrentPage('contact')}
-              className="px-8 py-4 border-2 border-emerald-900 text-emerald-900 rounded-full font-semibold hover:bg-emerald-900 hover:text-white transition-colors"
+              className="px-8 py-4 border-2 border-white/30 text-white rounded-full font-semibold hover:bg-white/10 transition-all duration-300"
             >
               Get in Touch
             </button>
             <a
-              href={data.demoUrl}
+              href={DEMO_URLS.sustain360}
               target="_blank"
               rel="noopener noreferrer"
-              className={`px-8 py-4 bg-gradient-to-r ${data.gradient} text-white rounded-full font-semibold hover:shadow-xl transition-shadow`}
+              className="px-8 py-4 bg-white text-emerald-900 rounded-full font-semibold hover:shadow-xl hover:shadow-white/20 transition-all duration-300"
             >
               View Demo
             </a>
@@ -911,139 +975,563 @@ const ProductDetailPage = ({ product }) => {
         </div>
       </section>
 
-      {/* Content with Side Nav */}
-      <div className="relative">
-        {/* Side Navigation */}
-        <nav className="hidden lg:block fixed left-8 top-1/2 -translate-y-1/2 z-40">
-          <div className="space-y-4">
-            {sections.map((section, index) => (
-              <button
-                key={section.id}
-                onClick={() => scrollToSection(section.id)}
-                className="flex items-center gap-3 text-left group"
-              >
-                <span className="text-emerald-600 font-semibold">{String(index + 1).padStart(2, '0')}</span>
-                <span className="text-sm text-slate-500 group-hover:text-emerald-600 transition-colors">
-                  {section.label}
-                </span>
-              </button>
-            ))}
-          </div>
-        </nav>
-
-        {/* Sections */}
+      {/* Video Section */}
+      <section className="py-20 bg-gradient-to-b from-slate-50 to-white">
         <div className="max-w-5xl mx-auto px-6 lg:px-8">
-          {/* What We Do */}
-          <section id="what-we-do" className="py-24">
-            <span className="text-emerald-600 font-medium text-sm uppercase tracking-wider">What we do</span>
-            <h2 className="text-4xl font-bold text-emerald-900 mt-4 mb-6">
-              {isSustain360 
-                ? 'Measure, monitor and manage greenhouse gas emissions'
-                : 'Measure, monitor and manage your tree assets with precision'
-              }
-            </h2>
-            <p className="text-lg text-slate-600 leading-relaxed">
-              {isSustain360
-                ? 'Sustain360 helps organizations measure, monitor, and manage their greenhouse gas emissions across operations and supply chains — all in one unified system.'
-                : 'ArborTag enables organizations to accurately measure, monitor, and manage their tree plantations using computer vision and AI.'
-              }
-            </p>
+          <div className="relative aspect-video rounded-2xl overflow-hidden shadow-2xl shadow-emerald-900/10 border border-slate-200">
+            <iframe
+              className="absolute inset-0 w-full h-full"
+              src="https://www.youtube.com/embed/YOUR_SUSTAIN360_VIDEO_ID?rel=0"
+              title="Sustain360 Product Video"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Page Layout - Sidebar + Content */}
+      <div className="flex min-h-screen">
+        {/* Left Sidebar Section */}
+        <aside className="hidden lg:block w-64 flex-shrink-0 bg-slate-50 border-r border-slate-200">
+          <nav className="sticky top-20 p-8">
+            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-6">Contents</p>
+            <div className="space-y-1">
+              {sections.map((section, index) => (
+                <button
+                  key={section.id}
+                  onClick={() => scrollToSection(section.id)}
+                  className="flex items-center gap-3 text-left group py-3 w-full border-l-2 border-slate-300 pl-4 hover:border-emerald-500 hover:bg-white transition-all rounded-r-lg"
+                >
+                  <span className="text-emerald-600 font-bold text-sm">{String(index + 1).padStart(2, '0')}</span>
+                  <span className="text-sm text-slate-600 group-hover:text-emerald-700 font-medium transition-colors">
+                    {section.label}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </nav>
+        </aside>
+
+        {/* Main Content Section */}
+        <div className="flex-1">
+          <div className="max-w-5xl mx-auto px-6 lg:px-12">
+            {/* What We Do */}
+            <section id="what-we-do" className="py-24">
+            <div className="grid lg:grid-cols-2 gap-16 items-center">
+              <div>
+                <span className="inline-block px-4 py-1.5 bg-emerald-100 text-emerald-700 rounded-full text-sm font-medium mb-6">What we do</span>
+                <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 mb-6 leading-tight">
+                  Measure, monitor and manage greenhouse gas emissions
+                </h2>
+                <p className="text-lg text-slate-600 leading-relaxed mb-6">
+                  Sustain360 helps organizations measure, monitor, and manage their greenhouse gas emissions across operations and supply chains — all in one unified system.
+                </p>
+                <p className="text-lg text-slate-600 leading-relaxed">
+                  We turn complex carbon data into actionable insights that help businesses reduce emissions, achieve compliance, and demonstrate real climate leadership.
+                </p>
+              </div>
+              <div className="relative">
+                <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-100">
+                  <img 
+                    src="/images/sustain360-dashboard.png" 
+                    alt="Sustain360 Dashboard"
+                    className="w-full h-full object-cover"
+                    onError={(e) => { 
+                      e.target.style.display = 'none';
+                    }}
+                  />
+                </div>
+                {/* Decorative element */}
+                <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl -z-10" />
+              </div>
+            </div>
           </section>
 
           {/* Problem */}
-          <section id="problem" className="py-24 border-t border-slate-100">
-            <span className="text-emerald-600 font-medium text-sm uppercase tracking-wider">The Problem We Solve</span>
-            <h2 className="text-4xl font-bold text-emerald-900 mt-4 mb-12">
-              {isSustain360
-                ? 'Organizations face increasing pressure to prove their climate commitments'
-                : 'Organizations struggle to accurately track tree plantation initiatives'
-              }
-            </h2>
-            <div className="grid md:grid-cols-2 gap-4">
-              {data.problems.map((problem, index) => (
-                <div key={index} className="p-6 bg-slate-50 rounded-2xl">
-                  <p className="text-slate-600">{problem}</p>
+          <section id="problem" className="py-24">
+            <div className="text-center max-w-3xl mx-auto mb-16">
+              <span className="inline-block px-4 py-1.5 bg-emerald-100 text-emerald-700 rounded-full text-sm font-medium mb-6">The Problem We Solve</span>
+              <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 mb-6 leading-tight">
+                Organizations today face increasing pressure to prove their climate commitments
+              </h2>
+            </div>
+            
+            <div className="grid md:grid-cols-2 gap-6">
+              {sustain360Problems.map((problem, index) => (
+                <div key={index} className="p-8 bg-white rounded-2xl border border-slate-200 hover:border-emerald-200 hover:shadow-lg hover:shadow-emerald-100/50 transition-all duration-300">
+                  <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center mb-4">
+                    <span className="text-emerald-600 font-bold">{String(index + 1).padStart(2, '0')}</span>
+                  </div>
+                  <p className="text-slate-700 text-lg">{problem}</p>
                 </div>
               ))}
             </div>
           </section>
 
           {/* Solution */}
-          <section id="solution" className="py-24 border-t border-slate-100">
-            <span className="text-emerald-600 font-medium text-sm uppercase tracking-wider">Our Solution</span>
-            <h2 className="text-4xl font-bold text-emerald-900 mt-4 mb-6">
-              {isSustain360 ? 'Complete Emissions Visibility' : 'AI-Powered Tree Measurement'}
-            </h2>
-            <p className="text-lg text-slate-600 leading-relaxed mb-8">
-              {isSustain360
-                ? 'Centralize and visualize every source of carbon, from energy use to supply chain, across Scope 1, 2, and 3.'
-                : 'Use smartphone cameras with ArUco markers to instantly capture accurate tree measurements — no specialized equipment required.'
-              }
-            </p>
-            <div className="p-8 bg-gradient-to-br from-emerald-50 to-teal-50 rounded-3xl">
-              <h3 className="text-xl font-semibold text-emerald-900 mb-4">
-                Smart Analytics That Drive Action
-              </h3>
-              <ul className="space-y-3">
-                {(isSustain360 
-                  ? ['Where are our biggest emission hotspots?', 'Which reduction projects deliver maximum ROI?', 'How are we performing month to month?', 'Are our initiatives accelerating our path to Net Zero?']
-                  : ['How many trees have survived in each zone?', 'What is the estimated carbon sequestration per tree?', 'Which areas need attention or replanting?', 'How is overall plantation health trending?']
-                ).map((item) => (
-                  <li key={item} className="flex items-start gap-3">
-                    <CheckIcon className="w-5 h-5 text-emerald-600 mt-0.5 flex-shrink-0" />
-                    <span className="text-slate-600">{item}</span>
-                  </li>
-                ))}
-              </ul>
+          <section id="solution" className="py-24">
+            <div className="grid lg:grid-cols-2 gap-16 items-center">
+              <div className="order-2 lg:order-1">
+                <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-100">
+                  <img 
+                    src="/images/sustain360-analytics.png" 
+                    alt="Analytics Dashboard"
+                    className="w-full h-full object-cover"
+                    onError={(e) => { e.target.style.display = 'none' }}
+                  />
+                </div>
+              </div>
+              <div className="order-1 lg:order-2">
+                <span className="inline-block px-4 py-1.5 bg-emerald-100 text-emerald-700 rounded-full text-sm font-medium mb-6">Our Solution</span>
+                <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 mb-6 leading-tight">
+                  Complete Emissions Visibility
+                </h2>
+                <p className="text-lg text-slate-600 leading-relaxed mb-8">
+                  Centralize and visualize every source of carbon, from energy use and logistics to supply chain and business travel, across Scope 1, Scope 2, and Scope 3.
+                </p>
+                
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-slate-900">Smart Analytics That Drive Action</h3>
+                  {[
+                    'Where are our biggest emission hotspots?',
+                    'Which reduction projects deliver maximum ROI?',
+                    'How are we performing month to month?',
+                    'Are our initiatives accelerating our path to Net Zero?'
+                  ].map((item, index) => (
+                    <div key={index} className="flex items-start gap-3">
+                      <div className="w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <CheckIcon className="w-3.5 h-3.5 text-white" />
+                      </div>
+                      <span className="text-slate-600">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </section>
 
-          {/* Why */}
-          <section id="why" className="py-24 border-t border-slate-100">
-            <span className="text-emerald-600 font-medium text-sm uppercase tracking-wider">Why {data.name}</span>
-            <div className="grid md:grid-cols-2 gap-8 mt-8">
-              <div className="p-8 bg-white border border-slate-200 rounded-3xl">
-                <h3 className="text-2xl font-bold text-emerald-900 mb-4">
-                  {isSustain360 ? 'Advanced & Modern Systems' : 'Computer Vision Technology'}
+          {/* Why Sustain360 */}
+          <section id="why" className="py-24">
+            <div className="text-center max-w-3xl mx-auto mb-16">
+              <span className="inline-block px-4 py-1.5 bg-emerald-100 text-emerald-700 rounded-full text-sm font-medium mb-6">Why Sustain360</span>
+              <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 leading-tight">
+                Built for enterprise sustainability
+              </h2>
+            </div>
+            
+            <div className="grid md:grid-cols-2 gap-8">
+              <div className="p-10 bg-gradient-to-br from-emerald-50 to-teal-50 rounded-3xl border border-emerald-100">
+                <div className="w-14 h-14 bg-emerald-600 rounded-2xl flex items-center justify-center mb-6">
+                  <svg className="w-7 h-7 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <rect x="2" y="3" width="20" height="14" rx="2" />
+                    <path d="M8 21h8M12 17v4" />
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-bold text-slate-900 mb-4">
+                  Advanced & Modern Systems
                 </h3>
-                <p className="text-slate-600">
-                  {isSustain360
-                    ? 'Built with the latest technology to ensure accuracy, scalability, and ease of use.'
-                    : 'Advanced AI algorithms deliver measurement accuracy within 5% using just a smartphone camera.'
-                  }
+                <p className="text-slate-600 text-lg leading-relaxed">
+                  Built with the latest technology to ensure accuracy, scalability, and ease of use for enterprises of all sizes.
                 </p>
               </div>
-              <div className="p-8 bg-white border border-slate-200 rounded-3xl">
-                <h3 className="text-2xl font-bold text-emerald-900 mb-4">
-                  {isSustain360 ? 'ROI-Focused' : 'Cost-Effective'}
+              <div className="p-10 bg-gradient-to-br from-teal-50 to-emerald-50 rounded-3xl border border-teal-100">
+                <div className="w-14 h-14 bg-teal-600 rounded-2xl flex items-center justify-center mb-6">
+                  <svg className="w-7 h-7 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-bold text-slate-900 mb-4">
+                  ROI-Focused Approach
                 </h3>
-                <p className="text-slate-600">
-                  {isSustain360
-                    ? 'Identify the most cost-effective reduction opportunities first.'
-                    : 'Reduce tree monitoring costs by up to 70% compared to traditional methods.'
-                  }
+                <p className="text-slate-600 text-lg leading-relaxed">
+                  Identify the most cost-effective reduction opportunities first, maximizing your return on sustainability investments.
                 </p>
               </div>
             </div>
           </section>
 
           {/* Results */}
-          <section id="results" className="py-24 border-t border-slate-100">
-            <span className="text-emerald-600 font-medium text-sm uppercase tracking-wider">Results You Can Expect</span>
-            <h2 className="text-4xl font-bold text-emerald-900 mt-4 mb-12">
-              Transform your {isSustain360 ? 'sustainability strategy' : 'tree monitoring operations'}
-            </h2>
-            <div className="grid md:grid-cols-2 gap-4">
-              {data.results.map((result, index) => (
-                <div key={index} className="p-6 bg-emerald-50 rounded-2xl flex items-start gap-4">
-                  <div className="w-8 h-8 bg-emerald-600 rounded-full flex items-center justify-center flex-shrink-0">
-                    <CheckIcon className="w-4 h-4 text-white" />
+          <section id="results" className="py-24">
+            <div className="text-center max-w-3xl mx-auto mb-16">
+              <span className="inline-block px-4 py-1.5 bg-emerald-100 text-emerald-700 rounded-full text-sm font-medium mb-6">Results You Can Expect</span>
+              <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 leading-tight">
+                Transform your sustainability strategy
+              </h2>
+            </div>
+            
+            <div className="grid md:grid-cols-2 gap-6">
+              {sustain360Results.map((result, index) => (
+                <div key={index} className="p-6 bg-emerald-50 rounded-2xl flex items-start gap-4 border border-emerald-100">
+                  <div className="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center flex-shrink-0">
+                    <CheckIcon className="w-5 h-5 text-white" />
                   </div>
-                  <p className="text-slate-700">{result}</p>
+                  <p className="text-slate-700 text-lg pt-1.5">{result}</p>
                 </div>
               ))}
             </div>
           </section>
+
+          {/* CTA Section */}
+          <section className="py-24 bg-gradient-to-br from-emerald-900 via-emerald-800 to-teal-900 -mx-6 lg:-mx-12 px-6 lg:px-12">
+            <div className="max-w-4xl mx-auto text-center">
+              <h2 className="text-4xl font-bold text-white mb-6">
+                Ready to transform your carbon management?
+              </h2>
+              <p className="text-xl text-emerald-200 mb-10">
+                Start your journey to Net Zero with Sustain360.
+              </p>
+              <div className="flex flex-wrap justify-center gap-4">
+                <button
+                  onClick={() => setCurrentPage('contact')}
+                  className="px-10 py-4 bg-white text-emerald-900 rounded-full font-semibold hover:shadow-xl hover:shadow-white/20 transition-all duration-300"
+                >
+                  Get Started Today
+                </button>
+                <a
+                  href={DEMO_URLS.sustain360}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-10 py-4 border-2 border-white/30 text-white rounded-full font-semibold hover:bg-white/10 transition-all duration-300"
+                >
+                  Try Demo
+                </a>
+              </div>
+            </div>
+          </section>
+          </div>
+        </div>
+      </div>
+    </main>
+  );
+};
+
+// ArborTag Product Detail Page
+const ArborTagPage = () => {
+  const { setCurrentPage } = useApp();
+
+  const sections = [
+    { id: 'what-we-do', label: 'What we do' },
+    { id: 'problem', label: 'The Problem' },
+    { id: 'solution', label: 'Our Solution' },
+    { id: 'features', label: 'Key Features' },
+    { id: 'use-cases', label: 'Use Cases' },
+    { id: 'results', label: 'Results' }
+  ];
+
+  const scrollToSection = (id) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  return (
+    <main className="pt-20">
+      {/* Hero Section */}
+      <section className="relative min-h-[70vh] flex items-center overflow-hidden">
+        {/* Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-teal-900 via-emerald-800 to-emerald-900">
+          <img 
+            src="/images/arbortag-hero-bg.jpg" 
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover opacity-30 mix-blend-overlay"
+            onError={(e) => { e.target.style.display = 'none' }}
+          />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-teal-500/20 via-transparent to-transparent" />
+        </div>
+        
+        <div className="relative max-w-5xl mx-auto px-6 lg:px-8 py-24 text-center w-full">
+          <div className="w-20 h-20 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-8 border border-white/20">
+            <TreeIcon className="w-10 h-10 text-teal-300" />
+          </div>
+          <h1 className="text-5xl lg:text-6xl font-bold text-white mb-4">
+            ArborTag
+          </h1>
+          <p className="text-xl text-teal-200 mb-2">Measure. Monitor. Sustain.</p>
+          <p className="text-lg text-white/70 mb-10 max-w-2xl mx-auto">
+            The Future of Tree Intelligence
+          </p>
+          <div className="flex flex-wrap justify-center gap-4">
+            <button
+              onClick={() => setCurrentPage('contact')}
+              className="px-8 py-4 border-2 border-white/30 text-white rounded-full font-semibold hover:bg-white/10 transition-all duration-300"
+            >
+              Get in Touch
+            </button>
+            <a
+              href={DEMO_URLS.arbortag}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-8 py-4 bg-white text-teal-900 rounded-full font-semibold hover:shadow-xl hover:shadow-white/20 transition-all duration-300"
+            >
+              View Demo
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Video Section */}
+      <section className="py-20 bg-gradient-to-b from-slate-50 to-white">
+        <div className="max-w-5xl mx-auto px-6 lg:px-8">
+          <div className="relative aspect-video rounded-2xl overflow-hidden shadow-2xl shadow-teal-900/10 border border-slate-200">
+            <iframe
+              className="absolute inset-0 w-full h-full"
+              src="https://www.youtube.com/embed/p0iGDVh6q2o?rel=0"
+              title="ArborTag Product Video"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Quote Banner */}
+      <section className="py-16 bg-gradient-to-r from-teal-600 to-emerald-600">
+        <div className="max-w-4xl mx-auto px-6 lg:px-8 text-center">
+          <p className="text-2xl lg:text-3xl font-medium text-white italic">
+            "Every tree tells a story. ArborTag lets you hear it."
+          </p>
+          <p className="mt-4 text-lg text-teal-100">
+            No clipboards. No spreadsheets. Just live, intelligent data.
+          </p>
+        </div>
+      </section>
+
+      {/* Page Layout - Sidebar + Content */}
+      <div className="flex min-h-screen">
+        {/* Left Sidebar Section */}
+        <aside className="hidden lg:block w-64 flex-shrink-0 bg-slate-50 border-r border-slate-200">
+          <nav className="sticky top-20 p-8">
+            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-6">Contents</p>
+            <div className="space-y-1">
+              {sections.map((section, index) => (
+                <button
+                  key={section.id}
+                  onClick={() => scrollToSection(section.id)}
+                  className="flex items-center gap-3 text-left group py-3 w-full border-l-2 border-slate-300 pl-4 hover:border-teal-500 hover:bg-white transition-all rounded-r-lg"
+                >
+                  <span className="text-teal-600 font-bold text-sm">{String(index + 1).padStart(2, '0')}</span>
+                  <span className="text-sm text-slate-600 group-hover:text-teal-700 font-medium transition-colors">
+                    {section.label}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </nav>
+        </aside>
+
+        {/* Main Content Section */}
+        <div className="flex-1">
+          <div className="max-w-5xl mx-auto px-6 lg:px-12">
+            {/* What We Do */}
+            <section id="what-we-do" className="py-24">
+              <div className="grid lg:grid-cols-2 gap-16 items-center">
+                <div>
+                  <span className="inline-block px-4 py-1.5 bg-teal-100 text-teal-700 rounded-full text-sm font-medium mb-6">What we do</span>
+                  <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 mb-6 leading-tight">
+                    Smart AI-Driven Tree Monitoring
+                  </h2>
+                  <p className="text-lg text-slate-600 leading-relaxed mb-6">
+                    ArborTag is a smart, AI-driven monitoring system that makes every tree measurable, traceable, and report-ready.
+                  </p>
+                  <p className="text-lg text-slate-600 leading-relaxed">
+                    We combine precision hardware, AI-based image analytics, and secure geotagging to deliver verified ecological insights in seconds.
+                  </p>
+                </div>
+              <div className="relative">
+                <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-gradient-to-br from-teal-50 to-emerald-50 border border-teal-100">
+                  <img 
+                    src="/images/arbortag-app-demo.png" 
+                    alt="ArborTag App"
+                    className="w-full h-full object-cover"
+                    onError={(e) => { e.target.style.display = 'none' }}
+                  />
+                </div>
+                <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-teal-500/10 rounded-full blur-2xl -z-10" />
+              </div>
+            </div>
+          </section>
+
+          {/* Problem */}
+          <section id="problem" className="py-24">
+            <div className="text-center max-w-3xl mx-auto mb-16">
+              <span className="inline-block px-4 py-1.5 bg-teal-100 text-teal-700 rounded-full text-sm font-medium mb-6">The Problem We Solve</span>
+              <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 mb-6 leading-tight">
+                Environmental data collection is outdated
+              </h2>
+              <p className="text-lg text-slate-600">
+                Tree audits are slow, manual, and often inaccurate. Corporates struggle to verify CSR plantations.
+              </p>
+            </div>
+            
+            <div className="grid md:grid-cols-2 gap-6">
+              {arbortagProblems.map((problem, index) => (
+                <div key={index} className="p-8 bg-white rounded-2xl border border-slate-200 hover:border-teal-200 hover:shadow-lg hover:shadow-teal-100/50 transition-all duration-300">
+                  <div className="w-10 h-10 bg-teal-100 rounded-xl flex items-center justify-center mb-4">
+                    <span className="text-teal-600 font-bold">{String(index + 1).padStart(2, '0')}</span>
+                  </div>
+                  <p className="text-slate-700 text-lg">{problem}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Solution */}
+          <section id="solution" className="py-24">
+            <div className="grid lg:grid-cols-2 gap-16 items-center">
+              <div className="order-2 lg:order-1">
+                <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-gradient-to-br from-teal-50 to-emerald-50 border border-teal-100">
+                  <img 
+                    src="/images/arbortag-aruco-demo.png" 
+                    alt="ArUco Detection"
+                    className="w-full h-full object-cover"
+                    onError={(e) => { e.target.style.display = 'none' }}
+                  />
+                </div>
+              </div>
+              <div className="order-1 lg:order-2">
+                <span className="inline-block px-4 py-1.5 bg-teal-100 text-teal-700 rounded-full text-sm font-medium mb-6">Our Solution</span>
+                <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 mb-6 leading-tight">
+                  AI-Powered Precision
+                </h2>
+                <p className="text-lg text-slate-600 leading-relaxed mb-8">
+                  Use smartphone cameras with ArUco markers to instantly capture accurate tree measurements — no specialized equipment required.
+                </p>
+                
+                <div className="space-y-4">
+                  {[
+                    'Instant tree identification and verification',
+                    'Accurate height and diameter measurements',
+                    'Secure GPS geotagging for every tree',
+                    'Carbon sequestration calculations'
+                  ].map((item, index) => (
+                    <div key={index} className="flex items-start gap-3">
+                      <div className="w-6 h-6 bg-teal-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <CheckIcon className="w-3.5 h-3.5 text-white" />
+                      </div>
+                      <span className="text-slate-600">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Key Features */}
+          <section id="features" className="py-24">
+            <div className="text-center max-w-3xl mx-auto mb-16">
+              <span className="inline-block px-4 py-1.5 bg-teal-100 text-teal-700 rounded-full text-sm font-medium mb-6">Key Features</span>
+              <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 leading-tight">
+                Everything you need for tree intelligence
+              </h2>
+            </div>
+            
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {arbortagFeatures.map((feature, index) => (
+                <div key={index} className="p-8 bg-white rounded-2xl border border-slate-200 hover:border-teal-200 hover:shadow-lg transition-all duration-300">
+                  <div className="w-12 h-12 bg-gradient-to-br from-teal-500 to-emerald-500 rounded-xl flex items-center justify-center mb-6">
+                    <CheckIcon className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-900 mb-3">{feature.title}</h3>
+                  <p className="text-slate-600">{feature.description}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Advantages */}
+          <section className="py-24">
+            <div className="bg-gradient-to-br from-teal-50 to-emerald-50 rounded-3xl p-10 lg:p-16 border border-teal-100">
+              <div className="max-w-3xl">
+                <span className="inline-block px-4 py-1.5 bg-teal-600 text-white rounded-full text-sm font-medium mb-6">Cutting-edge Advantages</span>
+                <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-10">
+                  Why ArborTag stands out
+                </h2>
+                
+                <div className="space-y-5">
+                  {arbortagAdvantages.map((advantage, index) => (
+                    <div key={index} className="flex items-start gap-4">
+                      <div className="w-8 h-8 bg-teal-600 rounded-full flex items-center justify-center flex-shrink-0">
+                        <CheckIcon className="w-4 h-4 text-white" />
+                      </div>
+                      <p className="text-slate-700 text-lg pt-0.5">{advantage}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Use Cases */}
+          <section id="use-cases" className="py-24">
+            <div className="text-center max-w-3xl mx-auto mb-16">
+              <span className="inline-block px-4 py-1.5 bg-teal-100 text-teal-700 rounded-full text-sm font-medium mb-6">Use Cases</span>
+              <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 leading-tight">
+                Built for diverse applications
+              </h2>
+            </div>
+            
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {arbortagUseCases.map((useCase, index) => (
+                <div key={index} className="p-6 bg-white rounded-2xl border border-slate-200 text-center hover:border-teal-300 hover:bg-teal-50 transition-all duration-300">
+                  <p className="text-slate-800 font-medium">{useCase}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Results */}
+          <section id="results" className="py-24">
+            <div className="text-center max-w-3xl mx-auto mb-16">
+              <span className="inline-block px-4 py-1.5 bg-teal-100 text-teal-700 rounded-full text-sm font-medium mb-6">Results You Can Expect</span>
+              <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 mb-6 leading-tight">
+                Transform your tree monitoring
+              </h2>
+              <p className="text-lg text-slate-600">
+                Because sustainability isn't about promises. It's about proof.
+              </p>
+            </div>
+            
+            <div className="grid md:grid-cols-2 gap-6">
+              {arbortagResults.map((result, index) => (
+                <div key={index} className="p-6 bg-teal-50 rounded-2xl flex items-start gap-4 border border-teal-100">
+                  <div className="w-10 h-10 bg-teal-600 rounded-full flex items-center justify-center flex-shrink-0">
+                    <CheckIcon className="w-5 h-5 text-white" />
+                  </div>
+                  <p className="text-slate-700 text-lg pt-1.5">{result}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* CTA Section */}
+          <section className="py-24 bg-gradient-to-br from-teal-900 via-emerald-800 to-emerald-900 -mx-6 lg:-mx-12 px-6 lg:px-12">
+            <div className="max-w-4xl mx-auto text-center">
+              <h2 className="text-4xl font-bold text-white mb-6">
+                Ready to tag the future of sustainability?
+              </h2>
+              <p className="text-xl text-teal-200 mb-10">
+                Get your quote today and transform how you monitor your green assets.
+              </p>
+              <div className="flex flex-wrap justify-center gap-4">
+                <button
+                  onClick={() => setCurrentPage('contact')}
+                  className="px-10 py-4 bg-white text-teal-900 rounded-full font-semibold hover:shadow-xl hover:shadow-white/20 transition-all duration-300"
+                >
+                  Contact Us
+                </button>
+                <a
+                  href={DEMO_URLS.arbortag}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-10 py-4 border-2 border-white/30 text-white rounded-full font-semibold hover:bg-white/10 transition-all duration-300"
+                >
+                  Watch Demo
+                </a>
+              </div>
+            </div>
+          </section>
+          </div>
         </div>
       </div>
     </main>
@@ -1227,9 +1715,9 @@ export default function App() {
       case 'products':
         return <ProductsPage />;
       case 'sustain360':
-        return <ProductDetailPage product="sustain360" />;
+        return <Sustain360Page />;
       case 'arbortag':
-        return <ProductDetailPage product="arbortag" />;
+        return <ArborTagPage />;
       case 'contact':
         return <ContactPage />;
       default:
@@ -1237,8 +1725,14 @@ export default function App() {
     }
   };
 
+  // Fix: Scroll to top when page changes
   useEffect(() => {
-    window.scrollTo(0, 0);
+    // Use setTimeout to ensure scroll happens after page render
+    const scrollTimeout = setTimeout(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    }, 0);
+    
+    return () => clearTimeout(scrollTimeout);
   }, [currentPage]);
 
   return (
