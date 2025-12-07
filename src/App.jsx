@@ -39,7 +39,7 @@ const teamMembers = [
 
 const clientsData = [
   { id: 1, name: 'Tata Motors', logo: '/images/client-1.png', person: 'Rajesh Kumar', role: 'Sustainability Head', testimonial: 'NatureMark Systems has been instrumental in helping us track and verify our tree plantation initiatives across multiple sites.' },
-  { id: 2, name: 'Infosys', logo: '/images/client-2.png', person: 'Priya Sharma', role: 'ESG Director', testimonial: 'Sustain360 transformed how we approach carbon accounting. The platform made our BRSR reporting seamless.' },
+  { id: 2, name: 'Infosys', logo: '/images/client-2.png', person: 'Priya Sharma', role: 'ESG Director', testimonial: 'CarbonDesk transformed how we approach carbon accounting. The platform made our BRSR reporting seamless.' },
   { id: 3, name: 'Mahindra Group', logo: '/images/client-3.png', person: 'Vikram Mehta', role: 'Chief Sustainability Officer', testimonial: 'The team at NatureMark truly understands the challenges of enterprise sustainability.' },
   { id: 4, name: 'Wipro', logo: '/images/client-4.png', person: 'Anita Desai', role: 'Environmental Compliance Manager', testimonial: 'Working with NatureMark has accelerated our Net Zero journey significantly.' },
   { id: 5, name: 'L&T', logo: '/images/client-5.png', person: 'Suresh Nair', role: 'VP Operations', testimonial: 'ArborTag gave us complete visibility into our afforestation projects.' },
@@ -84,7 +84,7 @@ const arbortagFeatures = [
   { title: 'Smart Tagging with AI Vision', description: 'Instantly identifies and verifies each tree using ArUco-based markers.' },
   { title: 'Real-time Growth Tracking', description: 'Monitors height, canopy spread, and health indicators continuously.' },
   { title: 'Geo-Fencing & Mapping', description: 'Create accurate digital boundaries of plantations and forest assets.' },
-  { title: 'Seamless Data Integration', description: 'Syncs directly with Sustain360™ for carbon and biodiversity reporting.' },
+  { title: 'Seamless Data Integration', description: 'Syncs directly with CarbonDesk™ for carbon and biodiversity reporting.' },
   { title: 'Offline Mode + Cloud Sync', description: 'Works in remote terrains — uploads when reconnected.' }
 ];
 
@@ -167,11 +167,23 @@ const Header = () => {
   const { currentPage, setCurrentPage } = useApp();
   const [scrolled, setScrolled] = useState(false);
 
+  // Reset scroll position when page changes
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.scrollTo(0, 0);
+    setScrolled(false);
+  }, [currentPage]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    
+    // Check initial scroll position
+    handleScroll();
+    
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [currentPage]);
 
   const navItems = [
     { id: 'home', label: 'Home' },
@@ -185,12 +197,12 @@ const Header = () => {
   const useWhiteText = isDarkHero && !scrolled;
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
       scrolled 
-        ? 'bg-white/95 backdrop-blur-md shadow-lg shadow-emerald-900/5' 
+        ? 'bg-white shadow-lg shadow-emerald-900/5' 
         : isDarkHero 
-          ? 'bg-emerald-900/20 backdrop-blur-sm' 
-          : 'bg-transparent'
+          ? 'bg-transparent' 
+          : 'bg-white shadow-lg shadow-emerald-900/5'
     }`}>
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
@@ -200,11 +212,16 @@ const Header = () => {
             className="flex items-center gap-3 group"
           >
             <img 
-              src="/images/logo.svg" 
+              src="/images/logo.svg"
               alt="NatureMark Systems" 
-              className="h-10 w-auto object-contain"
+              className={`h-10 w-auto object-contain transition-all duration-300 ${
+                useWhiteText ? 'brightness-0 invert' : ''
+              }`}
+              onError={(e) => {
+                e.target.style.display = 'none';
+              }}
             />
-            <span className={`text-xl font-semibold tracking-tight ${
+            <span className={`text-xl font-semibold tracking-tight transition-colors duration-300 ${
               useWhiteText ? 'text-white' : 'text-emerald-900'
             }`}>
               NatureMark Systems
@@ -221,13 +238,11 @@ const Header = () => {
                 <button
                   key={item.id}
                   onClick={() => setCurrentPage(item.id)}
-                  className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
+                  className={`px-5 py-2.5 rounded-full text-lg font-medium transition-all duration-300 ${
                     isActive
-                      ? useWhiteText 
-                        ? 'bg-white text-emerald-900 shadow-lg' 
-                        : 'bg-emerald-900 text-white shadow-lg shadow-emerald-900/20'
+                      ? 'bg-white text-emerald-900 shadow-lg'
                       : useWhiteText
-                        ? 'text-white hover:bg-white/10'
+                        ? 'text-white hover:bg-white/20'
                         : 'text-emerald-800 hover:bg-emerald-50'
                   }`}
                 >
@@ -242,7 +257,7 @@ const Header = () => {
             href={DEMO_URLS.main}
             target="_blank"
             rel="noopener noreferrer"
-            className={`hidden md:flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-medium transform hover:-translate-y-0.5 transition-all duration-300 ${
+            className={`hidden md:flex items-center gap-2 px-6 py-2.5 rounded-full text-lg font-medium transform hover:-translate-y-0.5 transition-all duration-300 ${
               useWhiteText
                 ? 'bg-white text-emerald-900 hover:shadow-lg hover:shadow-white/30'
                 : 'bg-gradient-to-r from-emerald-600 to-emerald-700 text-white hover:shadow-lg hover:shadow-emerald-600/30'
@@ -271,28 +286,41 @@ const Footer = () => {
       
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16 relative">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
-          {/* Brand */}
+          {/* Brand - Updated with actual logo */}
           <div className="lg:col-span-1">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center">
-                <LeafIcon className="w-6 h-6 text-emerald-400" />
-              </div>
+              <img 
+                src="/images/logo-white.svg" 
+                alt="NatureMark Systems" 
+                className="h-10 w-auto object-contain"
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                  e.target.parentElement.innerHTML = `
+                    <div class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center">
+                      <svg class="w-6 h-6 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6.5 21.5c4-4 8-8 12-12-4 4-8 8-12 12zm0 0c-2-2-2-6 0-8 4-4 10-4 14-2-4 2-10 6-14 10z"/>
+                      </svg>
+                    </div>
+                    <span class="text-xl font-semibold">NatureMark</span>
+                  `;
+                }}
+              />
               <span className="text-xl font-semibold">NatureMark</span>
             </div>
-            <p className="text-emerald-200/70 text-sm leading-relaxed">
+            <p className="text-emerald-200/70 text-base leading-relaxed">
               Empowering organizations to achieve sustainable growth through innovative technology solutions.
             </p>
           </div>
 
           {/* Navigation */}
           <div>
-            <h4 className="text-sm font-semibold uppercase tracking-wider text-emerald-400 mb-4">Navigation</h4>
+            <h4 className="text-lg font-semibold uppercase tracking-wider text-emerald-400 mb-4">Navigation</h4>
             <ul className="space-y-3">
               {['Home', 'About Us', 'Products', 'Contact'].map((item) => (
                 <li key={item}>
                   <button 
                     onClick={() => setCurrentPage(item.toLowerCase().replace(' ', ''))}
-                    className="text-emerald-200/70 hover:text-white transition-colors text-sm"
+                    className="text-emerald-200/70 hover:text-white transition-colors text-base"
                   >
                     {item}
                   </button>
@@ -303,20 +331,20 @@ const Footer = () => {
 
           {/* Products */}
           <div>
-            <h4 className="text-sm font-semibold uppercase tracking-wider text-emerald-400 mb-4">Products</h4>
+            <h4 className="text-lg font-semibold uppercase tracking-wider text-emerald-400 mb-4">Products</h4>
             <ul className="space-y-3">
               <li>
                 <button 
                   onClick={() => setCurrentPage('sustain360')}
-                  className="text-emerald-200/70 hover:text-white transition-colors text-sm"
+                  className="text-emerald-200/70 hover:text-white transition-colors text-base"
                 >
-                  Sustain360
+                  CarbonDesk
                 </button>
               </li>
               <li>
                 <button 
                   onClick={() => setCurrentPage('arbortag')}
-                  className="text-emerald-200/70 hover:text-white transition-colors text-sm"
+                  className="text-emerald-200/70 hover:text-white transition-colors text-base"
                 >
                   ArborTag
                 </button>
@@ -326,15 +354,15 @@ const Footer = () => {
 
           {/* Contact */}
           <div>
-            <h4 className="text-sm font-semibold uppercase tracking-wider text-emerald-400 mb-4">Contact</h4>
+            <h4 className="text-lg font-semibold uppercase tracking-wider text-emerald-400 mb-4">Contact</h4>
             <ul className="space-y-3">
               <li>
-                <a href="mailto:naturemarksystems@gmail.com" className="text-emerald-200/70 hover:text-white transition-colors text-sm">
+                <a href="mailto:naturemarksystems@gmail.com" className="text-emerald-200/70 hover:text-white transition-colors text-base">
                   naturemarksystems@gmail.com
                 </a>
               </li>
               <li>
-                <a href="tel:+919833363372" className="text-emerald-200/70 hover:text-white transition-colors text-sm">
+                <a href="tel:+919833363372" className="text-emerald-200/70 hover:text-white transition-colors text-base">
                   +91 9833363372
                 </a>
               </li>
@@ -344,12 +372,12 @@ const Footer = () => {
 
         {/* Bottom */}
         <div className="pt-8 border-t border-emerald-800/50 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-emerald-200/50 text-sm">
+          <p className="text-emerald-200/50 text-base">
             © 2025 NatureMark Systems. All rights reserved.
           </p>
           <div className="flex items-center gap-6">
-            <a href="#" className="text-emerald-200/50 hover:text-white text-sm transition-colors">Privacy Policy</a>
-            <a href="#" className="text-emerald-200/50 hover:text-white text-sm transition-colors">Terms of Service</a>
+            <a href="#" className="text-emerald-200/50 hover:text-white text-base transition-colors">Privacy Policy</a>
+            <a href="#" className="text-emerald-200/50 hover:text-white text-base transition-colors">Terms of Service</a>
           </div>
         </div>
       </div>
@@ -382,7 +410,7 @@ const HeroSection = () => {
           <div className="text-white">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full mb-8 backdrop-blur-sm">
               <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-              <span className="text-emerald-200 text-sm font-medium">Sustainability Technology</span>
+              <span className="text-emerald-200 text-lg font-medium">Sustainability Technology</span>
             </div>
             
             <h1 className="text-5xl lg:text-7xl font-bold leading-tight mb-6">
@@ -393,7 +421,7 @@ const HeroSection = () => {
               Future
             </h1>
             
-            <p className="text-xl text-emerald-100/80 mb-10 max-w-lg leading-relaxed">
+            <p className="text-2xl text-emerald-100/80 mb-10 max-w-lg leading-relaxed">
               We combine AI, IoT, and smart analytics to help organizations achieve ESG compliance and transform environmental impact into competitive advantage.
             </p>
             
@@ -418,13 +446,31 @@ const HeroSection = () => {
             <div className="relative w-full aspect-square">
               {/* Floating Cards */}
               <div className="absolute top-10 left-10 p-6 bg-white/10 backdrop-blur-lg rounded-2xl border border-white/20 animate-float">
-                <div className="text-4xl font-bold text-white">40%</div>
-                <div className="text-emerald-200 text-sm">Emission Reduction</div>
+                <div className="text-5xl font-bold text-white">40%</div>
+                <div className="text-emerald-200 text-base">Emission Reduction</div>
+              </div>
+              
+              {/* Logo Card - Added near 40% stat */}
+              <div className="absolute top-10 right-10 p-4 bg-white/10 backdrop-blur-lg rounded-2xl border border-white/20 animate-float" style={{ animationDelay: '0.3s' }}>
+                <img 
+                  src="/images/logo-white.svg" 
+                  alt="NatureMark" 
+                  className="w-16 h-16 object-contain"
+                  onError={(e) => {
+                    e.target.parentElement.innerHTML = `
+                      <div class="w-16 h-16 flex items-center justify-center">
+                        <svg class="w-12 h-12 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M6.5 21.5c4-4 8-8 12-12-4 4-8 8-12 12zm0 0c-2-2-2-6 0-8 4-4 10-4 14-2-4 2-10 6-14 10z"/>
+                        </svg>
+                      </div>
+                    `;
+                  }}
+                />
               </div>
               
               <div className="absolute bottom-20 right-10 p-6 bg-white/10 backdrop-blur-lg rounded-2xl border border-white/20 animate-float" style={{ animationDelay: '0.5s' }}>
-                <div className="text-4xl font-bold text-white">500+</div>
-                <div className="text-emerald-200 text-sm">Trees Monitored</div>
+                <div className="text-5xl font-bold text-white">500+</div>
+                <div className="text-emerald-200 text-base">Trees Monitored</div>
               </div>
               
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-br from-emerald-400/30 to-teal-400/30 rounded-full blur-xl" />
@@ -458,11 +504,11 @@ const AboutSection = () => {
       <div className="max-w-7xl mx-auto px-6 lg:px-8 relative">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           <div>
-            <span className="text-emerald-600 font-medium text-sm uppercase tracking-wider">About Us</span>
-            <h2 className="text-4xl lg:text-5xl font-bold text-emerald-900 mt-4 mb-6">
+            <span className="text-emerald-600 font-medium text-base uppercase tracking-wider">About Us</span>
+            <h2 className="text-6xl lg:text-7xl font-bold text-emerald-900 mt-4 mb-6">
               NatureMark Systems
             </h2>
-            <p className="text-lg text-slate-600 leading-relaxed mb-8">
+            <p className="text-2xl text-slate-600 leading-relaxed mb-8">
               At NMS, we combine AI, IoT, and smart data analytics to help companies achieve ESG compliance, reduce carbon footprints, and transform environmental impact into a competitive advantage.
             </p>
             
@@ -488,7 +534,7 @@ const AboutSection = () => {
                 <div className="w-48 h-48 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-full opacity-20 animate-pulse" />
               </div>
               <img 
-                src="/images/about-illustration.svg" 
+                src="/images/about-illustration.png" 
                 alt="About NatureMark" 
                 className="w-full h-full object-contain p-12"
                 onError={(e) => { e.target.style.display = 'none' }}
@@ -502,8 +548,8 @@ const AboutSection = () => {
                   <CheckIcon className="w-6 h-6 text-emerald-600" />
                 </div>
                 <div>
-                  <div className="text-2xl font-bold text-emerald-900">100%</div>
-                  <div className="text-slate-500 text-sm">Compliance Rate</div>
+                  <div className="text-5xl font-bold text-emerald-900">100%</div>
+                  <div className="text-slate-500 text-base">Compliance Rate</div>
                 </div>
               </div>
             </div>
@@ -521,7 +567,7 @@ const ProductsSection = () => {
   const products = [
     {
       id: 'sustain360',
-      name: 'Sustain360',
+      name: 'CarbonDesk',
       tagline: 'Enterprise Carbon Intelligence Platform',
       description: 'Measure, monitor, and manage greenhouse gas emissions across all operations.',
       gradient: 'from-emerald-600 to-emerald-800',
@@ -541,8 +587,8 @@ const ProductsSection = () => {
     <section className="py-24 bg-slate-50">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="text-center mb-16">
-          <span className="text-emerald-600 font-medium text-sm uppercase tracking-wider">Our Products</span>
-          <h2 className="text-4xl lg:text-5xl font-bold text-emerald-900 mt-4">
+          <span className="text-emerald-600 font-medium text-base uppercase tracking-wider">Our Products</span>
+          <h2 className="text-6xl lg:text-7xl font-bold text-emerald-900 mt-4">
             Smart Solutions for Sustainability
           </h2>
         </div>
@@ -572,13 +618,13 @@ const ProductsSection = () => {
               </div>
 
               <div className="p-8">
-                <h3 className="text-2xl font-bold text-emerald-900 mb-2">{product.name}</h3>
+                <h3 className="text-5xl font-bold text-emerald-900 mb-2">{product.name}</h3>
                 <p className="text-slate-500 mb-4">{product.tagline}</p>
                 <p className="text-slate-600 mb-6">{product.description}</p>
                 
                 <div className="flex flex-wrap gap-2 mb-6">
                   {product.features.map((feature) => (
-                    <span key={feature} className="px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full text-sm">
+                    <span key={feature} className="px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full text-base">
                       {feature}
                     </span>
                   ))}
@@ -606,69 +652,90 @@ const TestimonialsSection = () => {
   const client = clientsData[activeIndex];
 
   return (
-    <section className="py-24 bg-gradient-to-br from-emerald-900 via-emerald-800 to-teal-900 relative overflow-hidden">
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-0 left-0 w-full h-full" style={{
-          backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,0.1) 35px, rgba(255,255,255,0.1) 70px)`
-        }} />
-      </div>
+    <>
+      {/* Testimonials */}
+      <section className="bg-gradient-to-br from-emerald-900 via-emerald-800 to-emerald-900 py-20">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="flex flex-col lg:flex-row items-center gap-12">
+            {/* Left - Logo */}
+            <div className="bg-white rounded-2xl p-8 w-64 h-64 flex items-center justify-center flex-shrink-0">
+              <img 
+                src={client.logo} 
+                alt={client.name}
+                className="max-w-full max-h-full object-contain"
+                onError={(e) => { 
+                  e.target.style.display = 'none';
+                  e.target.parentElement.innerHTML = `<span class="text-emerald-800 font-bold text-2xl text-center">${client.name}</span>`;
+                }}
+              />
+            </div>
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 relative">
-        <div className="text-center mb-16">
-          <span className="text-emerald-400 font-medium text-sm uppercase tracking-wider">Testimonials</span>
-          <h2 className="text-4xl lg:text-5xl font-bold text-white mt-4">
-            Trusted by Industry Leaders
-          </h2>
-        </div>
-
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 lg:p-12 border border-white/20">
-            <QuoteIcon className="w-16 h-16 text-emerald-400 mb-6" />
-            
-            <p className="text-xl lg:text-2xl text-white leading-relaxed mb-8">
-              "{client.testimonial}"
-            </p>
-            
-            <div className="flex items-center gap-4">
-              <div className="w-16 h-16 bg-emerald-400/20 rounded-full overflow-hidden">
-                <img 
-                  src={client.logo} 
-                  alt={client.name} 
-                  className="w-full h-full object-contain p-2"
-                  onError={(e) => { e.target.style.display = 'none' }}
-                />
+            {/* Right - Quote and Details */}
+            <div className="flex-1">
+              <div className="text-white text-8xl font-serif leading-none mb-4">"</div>
+              
+              <p className="text-white text-xl lg:text-2xl leading-relaxed mb-6">
+                {client.testimonial}
+              </p>
+              
+              <div className="mb-8">
+                <span className="text-white font-semibold text-lg">{client.person}</span>
+                <span className="text-emerald-200 mx-2">•</span>
+                <span className="text-emerald-200">{client.role}, {client.name}</span>
               </div>
-              <div>
-                <div className="text-white font-semibold">{client.person}</div>
-                <div className="text-emerald-300 text-sm">{client.role}, {client.name}</div>
+              
+              <div className="flex gap-3">
+                <button 
+                  onClick={() => setActiveIndex((prev) => (prev - 1 + clientsData.length) % clientsData.length)}
+                  className="w-14 h-14 rounded-full bg-white/20 flex items-center justify-center text-white hover:bg-white hover:text-emerald-900 transition-all"
+                >
+                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                <button 
+                  onClick={() => setActiveIndex((prev) => (prev + 1) % clientsData.length)}
+                  className="w-14 h-14 rounded-full bg-white flex items-center justify-center text-emerald-900 hover:bg-emerald-100 transition-all"
+                >
+                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
               </div>
             </div>
           </div>
+        </div>
+      </section>
 
-          {/* Client Logos */}
-          <div className="flex flex-wrap justify-center gap-4 mt-12">
+      {/* Our Clients */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <h3 className="text-5xl font-bold text-slate-900 text-center mb-12">Our Clients</h3>
+          <div className="flex flex-wrap justify-center items-center gap-8">
             {clientsData.map((c, index) => (
-              <button
+              <button 
                 key={c.id}
                 onClick={() => setActiveIndex(index)}
-                className={`w-24 h-16 rounded-xl flex items-center justify-center transition-all duration-300 ${
+                className={`h-24 w-36 rounded-2xl flex items-center justify-center p-4 transition-all duration-300 ${
                   index === activeIndex 
-                    ? 'bg-white shadow-lg scale-110' 
-                    : 'bg-white/10 hover:bg-white/20'
+                    ? 'bg-emerald-50 ring-2 ring-emerald-500' 
+                    : 'bg-slate-100 hover:bg-slate-200'
                 }`}
               >
                 <img 
                   src={c.logo} 
                   alt={c.name} 
-                  className="w-full h-full object-contain p-3"
-                  onError={(e) => { e.target.parentElement.innerHTML = `<span class="text-xs ${index === activeIndex ? 'text-emerald-900' : 'text-white'}">${c.name}</span>` }}
+                  className="max-h-full max-w-full object-contain"
+                  onError={(e) => { 
+                    e.target.parentElement.innerHTML = `<span class="text-slate-500 font-medium text-base text-center">${c.name}</span>`;
+                  }}
                 />
               </button>
             ))}
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 };
 
@@ -677,19 +744,19 @@ const AccreditationsSection = () => {
   return (
     <section className="py-24 bg-white">
       <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center">
-        <span className="text-emerald-600 font-medium text-sm uppercase tracking-wider">Accreditations</span>
-        <h2 className="text-4xl lg:text-5xl font-bold text-emerald-900 mt-4 mb-6">
+        <span className="text-emerald-600 font-medium text-base uppercase tracking-wider">Accreditations</span>
+        <h2 className="text-6xl lg:text-7xl font-bold text-emerald-900 mt-4 mb-6">
           Our Accreditations
         </h2>
-        <p className="text-lg text-slate-600 max-w-2xl mx-auto mb-12">
+        <p className="text-2xl text-slate-600 max-w-2xl mx-auto mb-12">
           Our accreditations reinforce our commitment to standards-aligned sustainability and rigorous methodologies.
         </p>
         
         <div className="flex flex-wrap justify-center gap-12">
-          <div className="w-64 h-40 bg-slate-50 rounded-2xl flex items-center justify-center p-6">
+          <div className="w-256 h-160 bg-slate-20 rounded-2xl flex items-center justify-center p-6">
             <img src="/images/logo-iiswbm.svg" alt="IISWBM" className="max-w-full max-h-full object-contain" onError={(e) => { e.target.parentElement.innerHTML = '<span class="text-slate-400">IISWBM</span>' }} />
           </div>
-          <div className="w-64 h-40 bg-slate-50 rounded-2xl flex items-center justify-center p-6">
+          <div className="w-256 h-160 bg-slate-20 rounded-2xl flex items-center justify-center p-6">
             <img src="/images/logo-cii.svg" alt="CII" className="max-w-full max-h-full object-contain" onError={(e) => { e.target.parentElement.innerHTML = '<span class="text-slate-400">CII</span>' }} />
           </div>
         </div>
@@ -724,10 +791,10 @@ const AboutPage = () => {
       {/* Hero */}
       <section className="py-24 bg-gradient-to-br from-emerald-50 to-teal-50">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <h1 className="text-5xl lg:text-6xl font-bold text-emerald-900 mb-6">
+          <h1 className="text-6xl lg:text-7xl font-bold text-emerald-900 mb-6">
             At NatureMark Systems
           </h1>
-          <p className="text-xl text-slate-600 max-w-2xl">
+          <p className="text-2xl text-slate-600 max-w-2xl">
             Our goal is clear — to make sustainability not just a promise, but a practical and profitable pathway for every organization.
           </p>
         </div>
@@ -753,7 +820,7 @@ const AboutPage = () => {
             </div>
             <div className="lg:order-1">
               <p className="text-2xl text-slate-700 leading-relaxed">
-                That realization gave birth to <span className="text-emerald-600 font-semibold">Sustain360</span>. It converts raw environmental data into actionable insights — empowering companies to make informed decisions and meet ESG goals.
+                That realization gave birth to <span className="text-emerald-600 font-semibold">CarbonDesk</span>. It converts raw environmental data into actionable insights — empowering companies to make informed decisions and meet ESG goals.
               </p>
             </div>
           </div>
@@ -764,8 +831,8 @@ const AboutPage = () => {
       <section className="py-24 bg-slate-50">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="text-center mb-16">
-            <span className="text-emerald-600 font-medium text-sm uppercase tracking-wider">Our Team</span>
-            <h2 className="text-4xl lg:text-5xl font-bold text-emerald-900 mt-4">
+            <span className="text-emerald-600 font-medium text-base uppercase tracking-wider">Our Team</span>
+            <h2 className="text-6xl lg:text-7xl font-bold text-emerald-900 mt-4">
               Meet the Founders
             </h2>
           </div>
@@ -799,11 +866,11 @@ const AboutPage = () => {
 
           {/* Active Member Info */}
           <div className="mt-12 text-center max-w-2xl mx-auto">
-            <h3 className="text-2xl font-bold text-emerald-900">
+            <h3 className="text-5xl font-bold text-emerald-900">
               {teamMembers[activeTeamMember].name}
             </h3>
             <p className="text-emerald-600 mb-4">{teamMembers[activeTeamMember].role}</p>
-            <p className="text-xl text-slate-600 italic">
+            <p className="text-2xl text-slate-600 italic">
               "{teamMembers[activeTeamMember].quote}"
             </p>
           </div>
@@ -822,10 +889,10 @@ const ProductsPage = () => {
       {/* Hero */}
       <section className="py-24 bg-gradient-to-br from-emerald-50 to-teal-50">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center">
-          <h1 className="text-5xl lg:text-6xl font-bold text-emerald-900 mb-6">
+          <h1 className="text-6xl lg:text-7xl font-bold text-emerald-900 mb-6">
             Our Products
           </h1>
-          <p className="text-xl text-slate-600">
+          <p className="text-2xl text-slate-600">
             Smart solutions for a sustainable future
           </p>
         </div>
@@ -840,9 +907,9 @@ const ProductsPage = () => {
               <img src="/images/sustain360-preview.svg" alt="Sustain360" className="w-full h-full object-cover" onError={(e) => { e.target.style.display = 'none' }} />
             </div>
             <div>
-              <span className="inline-block px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-sm mb-4">Carbon Intelligence</span>
-              <h2 className="text-4xl font-bold text-emerald-900 mb-4">Sustain360</h2>
-              <p className="text-lg text-emerald-600 mb-4">Enterprise Carbon Intelligence Platform</p>
+              <span className="inline-block px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-base mb-4">Carbon Intelligence</span>
+              <h2 className="text-5xl font-bold text-emerald-900 mb-4">CarbonDesk</h2>
+              <p className="text-2xl text-emerald-600 mb-4">Enterprise Carbon Intelligence Platform</p>
               <p className="text-slate-600 mb-6 leading-relaxed">
                 A comprehensive platform that helps organizations measure, monitor, and manage their greenhouse gas emissions across all operations and supply chains.
               </p>
@@ -870,9 +937,9 @@ const ProductsPage = () => {
               <img src="/images/arbortag-preview.png" alt="ArborTag" className="w-full h-full object-cover" onError={(e) => { e.target.style.display = 'none' }} />
             </div>
             <div className="lg:order-1">
-              <span className="inline-block px-3 py-1 bg-teal-100 text-teal-700 rounded-full text-sm mb-4">Tree Intelligence</span>
-              <h2 className="text-4xl font-bold text-emerald-900 mb-4">ArborTag</h2>
-              <p className="text-lg text-teal-600 mb-4">Measure. Monitor. Sustain</p>
+              <span className="inline-block px-3 py-1 bg-teal-100 text-teal-700 rounded-full text-base mb-4">Tree Intelligence</span>
+              <h2 className="text-5xl font-bold text-emerald-900 mb-4">ArborTag</h2>
+              <p className="text-xl text-teal-600 mb-4">Measure. Monitor. Sustain</p>
               <p className="text-slate-600 mb-6 leading-relaxed">
                 A smart, AI-driven monitoring system that makes every tree measurable, traceable, and report-ready. ArborTag combines precision hardware, AI-based image analytics, and secure geotagging.
               </p>
@@ -899,7 +966,7 @@ const ProductsPage = () => {
       {/* CTA */}
       <section className="py-24 bg-gradient-to-br from-emerald-600 to-teal-600">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center">
-          <h2 className="text-4xl font-bold text-white mb-4">
+          <h2 className="text-5xl font-bold text-white mb-4">
             Ready to Start Your Sustainability Journey?
           </h2>
           <p className="text-emerald-100 text-lg mb-8">
@@ -925,7 +992,7 @@ const Sustain360Page = () => {
     { id: 'what-we-do', label: 'What we do' },
     { id: 'problem', label: 'The Problem' },
     { id: 'solution', label: 'Our Solution' },
-    { id: 'why', label: 'Why Sustain360' },
+    { id: 'why', label: 'Why CarbonDesk' },
     { id: 'results', label: 'Results' }
   ];
 
@@ -934,28 +1001,31 @@ const Sustain360Page = () => {
   };
 
   return (
-    <main className="pt-20">
-      {/* Hero Section */}
+    <main>
+      {/* Hero Section - With background image */}
       <section className="relative min-h-[70vh] flex items-center overflow-hidden">
-        {/* Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-emerald-900 via-emerald-800 to-teal-900">
+        {/* Background with image */}
+        <div className="absolute inset-0 bg-gradient-to-br from-emerald-700 via-emerald-600 to-teal-700">
+          {/* Hero Background Image */}
           <img 
-            src="/images/sustain360-hero-bg.jpg" 
+            src="/images/sustain360-hero-bg.png" 
             alt=""
-            className="absolute inset-0 w-full h-full object-cover opacity-30 mix-blend-overlay"
+            className="absolute inset-0 w-full h-full object-cover opacity-80"
             onError={(e) => { e.target.style.display = 'none' }}
           />
+          {/* Gradient overlay for better text readability */}
+          <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/80 via-emerald-800/70 to-teal-900/80" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-emerald-500/20 via-transparent to-transparent" />
         </div>
         
-        <div className="relative max-w-5xl mx-auto px-6 lg:px-8 py-24 text-center w-full">
+        <div className="relative max-w-5xl mx-auto px-6 lg:px-8 pt-32 pb-24 text-center w-full">
           <div className="w-20 h-20 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-8 border border-white/20">
             <LeafIcon className="w-10 h-10 text-emerald-300" />
           </div>
-          <h1 className="text-5xl lg:text-6xl font-bold text-white mb-4">
-            Sustain360
+          <h1 className="text-6xl lg:text-7xl font-bold text-white mb-4">
+            CarbonDesk
           </h1>
-          <p className="text-xl text-emerald-200 mb-10 max-w-2xl mx-auto">Enterprise Carbon Intelligence Platform</p>
+          <p className="text-2xl text-emerald-200 mb-10 max-w-2xl mx-auto">Enterprise Carbon Intelligence Platform</p>
           <div className="flex flex-wrap justify-center gap-4">
             <button
               onClick={() => setCurrentPage('contact')}
@@ -982,7 +1052,7 @@ const Sustain360Page = () => {
             <iframe
               className="absolute inset-0 w-full h-full"
               src="https://www.youtube.com/embed/YOUR_SUSTAIN360_VIDEO_ID?rel=0"
-              title="Sustain360 Product Video"
+              title="CarbonDesk Product Video"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
@@ -1004,8 +1074,8 @@ const Sustain360Page = () => {
                   onClick={() => scrollToSection(section.id)}
                   className="flex items-center gap-3 text-left group py-3 w-full border-l-2 border-slate-300 pl-4 hover:border-emerald-500 hover:bg-white transition-all rounded-r-lg"
                 >
-                  <span className="text-emerald-600 font-bold text-sm">{String(index + 1).padStart(2, '0')}</span>
-                  <span className="text-sm text-slate-600 group-hover:text-emerald-700 font-medium transition-colors">
+                  <span className="text-emerald-600 font-bold text-base">{String(index + 1).padStart(2, '0')}</span>
+                  <span className="text-base text-slate-600 group-hover:text-emerald-700 font-medium transition-colors">
                     {section.label}
                   </span>
                 </button>
@@ -1021,14 +1091,14 @@ const Sustain360Page = () => {
             <section id="what-we-do" className="py-24">
             <div className="grid lg:grid-cols-2 gap-16 items-center">
               <div>
-                <span className="inline-block px-4 py-1.5 bg-emerald-100 text-emerald-700 rounded-full text-sm font-medium mb-6">What we do</span>
-                <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 mb-6 leading-tight">
+                <span className="inline-block px-4 py-1.5 bg-emerald-100 text-emerald-700 rounded-full text-lg font-medium mb-6">What we do</span>
+                <h2 className="text-6xl lg:text-7xl font-bold text-slate-900 mb-6 leading-tight">
                   Measure, monitor and manage greenhouse gas emissions
                 </h2>
-                <p className="text-lg text-slate-600 leading-relaxed mb-6">
-                  Sustain360 helps organizations measure, monitor, and manage their greenhouse gas emissions across operations and supply chains — all in one unified system.
+                <p className="text-2xl text-slate-600 leading-relaxed mb-6">
+                  CarbonDesk helps organizations measure, monitor, and manage their greenhouse gas emissions across operations and supply chains — all in one unified system.
                 </p>
-                <p className="text-lg text-slate-600 leading-relaxed">
+                <p className="text-2xl text-slate-600 leading-relaxed">
                   We turn complex carbon data into actionable insights that help businesses reduce emissions, achieve compliance, and demonstrate real climate leadership.
                 </p>
               </div>
@@ -1036,7 +1106,7 @@ const Sustain360Page = () => {
                 <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-100">
                   <img 
                     src="/images/sustain360-dashboard.png" 
-                    alt="Sustain360 Dashboard"
+                    alt="CarbonDesk Dashboard"
                     className="w-full h-full object-cover"
                     onError={(e) => { 
                       e.target.style.display = 'none';
@@ -1052,8 +1122,8 @@ const Sustain360Page = () => {
           {/* Problem */}
           <section id="problem" className="py-24">
             <div className="text-center max-w-3xl mx-auto mb-16">
-              <span className="inline-block px-4 py-1.5 bg-emerald-100 text-emerald-700 rounded-full text-sm font-medium mb-6">The Problem We Solve</span>
-              <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 mb-6 leading-tight">
+              <span className="inline-block px-4 py-1.5 bg-emerald-100 text-emerald-700 rounded-full text-lg font-medium mb-6">The Problem We Solve</span>
+              <h2 className="text-6xl lg:text-7xl font-bold text-slate-900 mb-6 leading-tight">
                 Organizations today face increasing pressure to prove their climate commitments
               </h2>
             </div>
@@ -1084,11 +1154,11 @@ const Sustain360Page = () => {
                 </div>
               </div>
               <div className="order-1 lg:order-2">
-                <span className="inline-block px-4 py-1.5 bg-emerald-100 text-emerald-700 rounded-full text-sm font-medium mb-6">Our Solution</span>
-                <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 mb-6 leading-tight">
+                <span className="inline-block px-4 py-1.5 bg-emerald-100 text-emerald-700 rounded-full text-lg font-medium mb-6">Our Solution</span>
+                <h2 className="text-6xl lg:text-7xl font-bold text-slate-900 mb-6 leading-tight">
                   Complete Emissions Visibility
                 </h2>
-                <p className="text-lg text-slate-600 leading-relaxed mb-8">
+                <p className="text-2xl text-slate-600 leading-relaxed mb-8">
                   Centralize and visualize every source of carbon, from energy use and logistics to supply chain and business travel, across Scope 1, Scope 2, and Scope 3.
                 </p>
                 
@@ -1115,8 +1185,8 @@ const Sustain360Page = () => {
           {/* Why Sustain360 */}
           <section id="why" className="py-24">
             <div className="text-center max-w-3xl mx-auto mb-16">
-              <span className="inline-block px-4 py-1.5 bg-emerald-100 text-emerald-700 rounded-full text-sm font-medium mb-6">Why Sustain360</span>
-              <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 leading-tight">
+              <span className="inline-block px-4 py-1.5 bg-emerald-100 text-emerald-700 rounded-full text-lg font-medium mb-6">Why CarbonDesk</span>
+              <h2 className="text-6xl lg:text-7xl font-bold text-slate-900 leading-tight">
                 Built for enterprise sustainability
               </h2>
             </div>
@@ -1129,7 +1199,7 @@ const Sustain360Page = () => {
                     <path d="M8 21h8M12 17v4" />
                   </svg>
                 </div>
-                <h3 className="text-2xl font-bold text-slate-900 mb-4">
+                <h3 className="text-5xl font-bold text-slate-900 mb-4">
                   Advanced & Modern Systems
                 </h3>
                 <p className="text-slate-600 text-lg leading-relaxed">
@@ -1142,7 +1212,7 @@ const Sustain360Page = () => {
                     <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
                   </svg>
                 </div>
-                <h3 className="text-2xl font-bold text-slate-900 mb-4">
+                <h3 className="text-5xl font-bold text-slate-900 mb-4">
                   ROI-Focused Approach
                 </h3>
                 <p className="text-slate-600 text-lg leading-relaxed">
@@ -1155,8 +1225,8 @@ const Sustain360Page = () => {
           {/* Results */}
           <section id="results" className="py-24">
             <div className="text-center max-w-3xl mx-auto mb-16">
-              <span className="inline-block px-4 py-1.5 bg-emerald-100 text-emerald-700 rounded-full text-sm font-medium mb-6">Results You Can Expect</span>
-              <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 leading-tight">
+              <span className="inline-block px-4 py-1.5 bg-emerald-100 text-emerald-700 rounded-full text-lg font-medium mb-6">Results You Can Expect</span>
+              <h2 className="text-6xl lg:text-7xl font-bold text-slate-900 leading-tight">
                 Transform your sustainability strategy
               </h2>
             </div>
@@ -1176,11 +1246,11 @@ const Sustain360Page = () => {
           {/* CTA Section */}
           <section className="py-24 bg-gradient-to-br from-emerald-900 via-emerald-800 to-teal-900 -mx-6 lg:-mx-12 px-6 lg:px-12">
             <div className="max-w-4xl mx-auto text-center">
-              <h2 className="text-4xl font-bold text-white mb-6">
+              <h2 className="text-5xl font-bold text-white mb-6">
                 Ready to transform your carbon management?
               </h2>
-              <p className="text-xl text-emerald-200 mb-10">
-                Start your journey to Net Zero with Sustain360.
+              <p className="text-2xl text-emerald-200 mb-10">
+                Start your journey to Net Zero with CarbonDesk.
               </p>
               <div className="flex flex-wrap justify-center gap-4">
                 <button
@@ -1225,29 +1295,32 @@ const ArborTagPage = () => {
   };
 
   return (
-    <main className="pt-20">
-      {/* Hero Section */}
+    <main>
+      {/* Hero Section - With background image */}
       <section className="relative min-h-[70vh] flex items-center overflow-hidden">
-        {/* Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-teal-900 via-emerald-800 to-emerald-900">
+        {/* Background with image */}
+        <div className="absolute inset-0 bg-gradient-to-br from-teal-700 via-emerald-600 to-emerald-700">
+          {/* Hero Background Image */}
           <img 
-            src="/images/arbortag-hero-bg.jpg" 
+            src="/images/arbortag-hero-bg.png" 
             alt=""
-            className="absolute inset-0 w-full h-full object-cover opacity-30 mix-blend-overlay"
+            className="absolute inset-0 w-full h-full object-cover opacity-80"
             onError={(e) => { e.target.style.display = 'none' }}
           />
+          {/* Gradient overlay for better text readability */}
+          <div className="absolute inset-0 bg-gradient-to-br from-teal-900/80 via-emerald-800/70 to-emerald-900/80" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-teal-500/20 via-transparent to-transparent" />
         </div>
         
-        <div className="relative max-w-5xl mx-auto px-6 lg:px-8 py-24 text-center w-full">
+        <div className="relative max-w-5xl mx-auto px-6 lg:px-8 pt-32 pb-24 text-center w-full">
           <div className="w-20 h-20 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-8 border border-white/20">
             <TreeIcon className="w-10 h-10 text-teal-300" />
           </div>
-          <h1 className="text-5xl lg:text-6xl font-bold text-white mb-4">
+          <h1 className="text-6xl lg:text-7xl font-bold text-white mb-4">
             ArborTag
           </h1>
           <p className="text-xl text-teal-200 mb-2">Measure. Monitor. Sustain.</p>
-          <p className="text-lg text-white/70 mb-10 max-w-2xl mx-auto">
+          <p className="text-xl text-white/70 mb-10 max-w-2xl mx-auto">
             The Future of Tree Intelligence
           </p>
           <div className="flex flex-wrap justify-center gap-4">
@@ -1291,7 +1364,7 @@ const ArborTagPage = () => {
           <p className="text-2xl lg:text-3xl font-medium text-white italic">
             "Every tree tells a story. ArborTag lets you hear it."
           </p>
-          <p className="mt-4 text-lg text-teal-100">
+          <p className="mt-4 text-xl text-teal-100">
             No clipboards. No spreadsheets. Just live, intelligent data.
           </p>
         </div>
@@ -1310,8 +1383,8 @@ const ArborTagPage = () => {
                   onClick={() => scrollToSection(section.id)}
                   className="flex items-center gap-3 text-left group py-3 w-full border-l-2 border-slate-300 pl-4 hover:border-teal-500 hover:bg-white transition-all rounded-r-lg"
                 >
-                  <span className="text-teal-600 font-bold text-sm">{String(index + 1).padStart(2, '0')}</span>
-                  <span className="text-sm text-slate-600 group-hover:text-teal-700 font-medium transition-colors">
+                  <span className="text-teal-600 font-bold text-base">{String(index + 1).padStart(2, '0')}</span>
+                  <span className="text-base text-slate-600 group-hover:text-teal-700 font-medium transition-colors">
                     {section.label}
                   </span>
                 </button>
@@ -1327,14 +1400,14 @@ const ArborTagPage = () => {
             <section id="what-we-do" className="py-24">
               <div className="grid lg:grid-cols-2 gap-16 items-center">
                 <div>
-                  <span className="inline-block px-4 py-1.5 bg-teal-100 text-teal-700 rounded-full text-sm font-medium mb-6">What we do</span>
-                  <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 mb-6 leading-tight">
+                  <span className="inline-block px-4 py-1.5 bg-teal-100 text-teal-700 rounded-full text-lg font-medium mb-6">What we do</span>
+                  <h2 className="text-6xl lg:text-7xl font-bold text-slate-900 mb-6 leading-tight">
                     Smart AI-Driven Tree Monitoring
                   </h2>
-                  <p className="text-lg text-slate-600 leading-relaxed mb-6">
+                  <p className="text-2xl text-slate-600 leading-relaxed mb-6">
                     ArborTag is a smart, AI-driven monitoring system that makes every tree measurable, traceable, and report-ready.
                   </p>
-                  <p className="text-lg text-slate-600 leading-relaxed">
+                  <p className="text-2xl text-slate-600 leading-relaxed">
                     We combine precision hardware, AI-based image analytics, and secure geotagging to deliver verified ecological insights in seconds.
                   </p>
                 </div>
@@ -1355,11 +1428,11 @@ const ArborTagPage = () => {
           {/* Problem */}
           <section id="problem" className="py-24">
             <div className="text-center max-w-3xl mx-auto mb-16">
-              <span className="inline-block px-4 py-1.5 bg-teal-100 text-teal-700 rounded-full text-sm font-medium mb-6">The Problem We Solve</span>
-              <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 mb-6 leading-tight">
+              <span className="inline-block px-4 py-1.5 bg-teal-100 text-teal-700 rounded-full text-lg font-medium mb-6">The Problem We Solve</span>
+              <h2 className="text-6xl lg:text-7xl font-bold text-slate-900 mb-6 leading-tight">
                 Environmental data collection is outdated
               </h2>
-              <p className="text-lg text-slate-600">
+              <p className="text-2xl text-slate-600">
                 Tree audits are slow, manual, and often inaccurate. Corporates struggle to verify CSR plantations.
               </p>
             </div>
@@ -1390,11 +1463,11 @@ const ArborTagPage = () => {
                 </div>
               </div>
               <div className="order-1 lg:order-2">
-                <span className="inline-block px-4 py-1.5 bg-teal-100 text-teal-700 rounded-full text-sm font-medium mb-6">Our Solution</span>
-                <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 mb-6 leading-tight">
+                <span className="inline-block px-4 py-1.5 bg-teal-100 text-teal-700 rounded-full text-lg font-medium mb-6">Our Solution</span>
+                <h2 className="text-6xl lg:text-7xl font-bold text-slate-900 mb-6 leading-tight">
                   AI-Powered Precision
                 </h2>
-                <p className="text-lg text-slate-600 leading-relaxed mb-8">
+                <p className="text-2xl text-slate-600 leading-relaxed mb-8">
                   Use smartphone cameras with ArUco markers to instantly capture accurate tree measurements — no specialized equipment required.
                 </p>
                 
@@ -1420,8 +1493,8 @@ const ArborTagPage = () => {
           {/* Key Features */}
           <section id="features" className="py-24">
             <div className="text-center max-w-3xl mx-auto mb-16">
-              <span className="inline-block px-4 py-1.5 bg-teal-100 text-teal-700 rounded-full text-sm font-medium mb-6">Key Features</span>
-              <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 leading-tight">
+              <span className="inline-block px-4 py-1.5 bg-teal-100 text-teal-700 rounded-full text-lg font-medium mb-6">Key Features</span>
+              <h2 className="text-6xl lg:text-7xl font-bold text-slate-900 leading-tight">
                 Everything you need for tree intelligence
               </h2>
             </div>
@@ -1443,8 +1516,8 @@ const ArborTagPage = () => {
           <section className="py-24">
             <div className="bg-gradient-to-br from-teal-50 to-emerald-50 rounded-3xl p-10 lg:p-16 border border-teal-100">
               <div className="max-w-3xl">
-                <span className="inline-block px-4 py-1.5 bg-teal-600 text-white rounded-full text-sm font-medium mb-6">Cutting-edge Advantages</span>
-                <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-10">
+                <span className="inline-block px-4 py-1.5 bg-teal-600 text-white rounded-full text-lg font-medium mb-6">Cutting-edge Advantages</span>
+                <h2 className="text-3xl lg:text-5xl font-bold text-slate-900 mb-10">
                   Why ArborTag stands out
                 </h2>
                 
@@ -1465,8 +1538,8 @@ const ArborTagPage = () => {
           {/* Use Cases */}
           <section id="use-cases" className="py-24">
             <div className="text-center max-w-3xl mx-auto mb-16">
-              <span className="inline-block px-4 py-1.5 bg-teal-100 text-teal-700 rounded-full text-sm font-medium mb-6">Use Cases</span>
-              <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 leading-tight">
+              <span className="inline-block px-4 py-1.5 bg-teal-100 text-teal-700 rounded-full text-lg font-medium mb-6">Use Cases</span>
+              <h2 className="text-6xl lg:text-7xl font-bold text-slate-900 leading-tight">
                 Built for diverse applications
               </h2>
             </div>
@@ -1483,11 +1556,11 @@ const ArborTagPage = () => {
           {/* Results */}
           <section id="results" className="py-24">
             <div className="text-center max-w-3xl mx-auto mb-16">
-              <span className="inline-block px-4 py-1.5 bg-teal-100 text-teal-700 rounded-full text-sm font-medium mb-6">Results You Can Expect</span>
-              <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 mb-6 leading-tight">
+              <span className="inline-block px-4 py-1.5 bg-teal-100 text-teal-700 rounded-full text-lg font-medium mb-6">Results You Can Expect</span>
+              <h2 className="text-6xl lg:text-7xl font-bold text-slate-900 mb-6 leading-tight">
                 Transform your tree monitoring
               </h2>
-              <p className="text-lg text-slate-600">
+              <p className="text-2xl text-slate-600">
                 Because sustainability isn't about promises. It's about proof.
               </p>
             </div>
@@ -1507,7 +1580,7 @@ const ArborTagPage = () => {
           {/* CTA Section */}
           <section className="py-24 bg-gradient-to-br from-teal-900 via-emerald-800 to-emerald-900 -mx-6 lg:-mx-12 px-6 lg:px-12">
             <div className="max-w-4xl mx-auto text-center">
-              <h2 className="text-4xl font-bold text-white mb-6">
+              <h2 className="text-5xl font-bold text-white mb-6">
                 Ready to tag the future of sustainability?
               </h2>
               <p className="text-xl text-teal-200 mb-10">
@@ -1549,11 +1622,11 @@ const ContactPage = () => {
           <div className="grid lg:grid-cols-2 gap-16">
             {/* Info */}
             <div>
-              <span className="text-emerald-600 font-medium text-sm uppercase tracking-wider">Contact Us</span>
+              <span className="text-emerald-600 font-medium text-base uppercase tracking-wider">Contact Us</span>
               <h1 className="text-5xl font-bold text-emerald-900 mt-4 mb-4">
                 Connect With Us
               </h1>
-              <p className="text-xl text-slate-600 mb-8">
+              <p className="text-2xl text-slate-600 mb-8">
                 Initiate Your ESG Excellence Journey
               </p>
 
@@ -1575,7 +1648,7 @@ const ContactPage = () => {
 
               {/* FAQ */}
               <div>
-                <h3 className="text-2xl font-bold text-emerald-900 mb-6">
+                <h3 className="text-5xl font-bold text-emerald-900 mb-6">
                   Frequently Asked Questions
                 </h3>
                 <div className="space-y-4">
@@ -1608,7 +1681,7 @@ const ContactPage = () => {
               <form className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                    <label className="block text-lg font-medium text-slate-700 mb-2">
                       First Name <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -1618,7 +1691,7 @@ const ContactPage = () => {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                    <label className="block text-lg font-medium text-slate-700 mb-2">
                       Last Name <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -1630,7 +1703,7 @@ const ContactPage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                  <label className="block text-lg font-medium text-slate-700 mb-2">
                     Company Name <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -1641,7 +1714,7 @@ const ContactPage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                  <label className="block text-lg font-medium text-slate-700 mb-2">
                     Email <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -1652,7 +1725,7 @@ const ContactPage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                  <label className="block text-lg font-medium text-slate-700 mb-2">
                     Phone Number <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -1663,7 +1736,7 @@ const ContactPage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-3">
+                  <label className="block text-lg font-medium text-slate-700 mb-3">
                     How can we help you?
                   </label>
                   <div className="space-y-3">
@@ -1679,7 +1752,7 @@ const ContactPage = () => {
                           type="checkbox"
                           className="w-5 h-5 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 mt-0.5"
                         />
-                        <span className="text-sm text-slate-600">{item}</span>
+                        <span className="text-base text-slate-600">{item}</span>
                       </label>
                     ))}
                   </div>
