@@ -116,12 +116,6 @@ const DEMO_URLS = {
 // ============================================
 // ICONS
 // ============================================
-const LeafIcon = ({ className = "w-6 h-6" }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <path d="M6.5 21.5c4-4 8-8 12-12-4 4-8 8-12 12zm0 0c-2-2-2-6 0-8 4-4 10-4 14-2-4 2-10 6-14 10z"/>
-  </svg>
-);
-
 const PlayIcon = ({ className = "w-8 h-8" }) => (
   <svg className={className} viewBox="0 0 24 24" fill="currentColor">
     <path d="M8 5v14l11-7z"/>
@@ -143,18 +137,6 @@ const ChevronDownIcon = ({ className = "w-5 h-5" }) => (
 const CheckIcon = ({ className = "w-5 h-5" }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <path d="M20 6L9 17l-5-5"/>
-  </svg>
-);
-
-const QuoteIcon = ({ className = "w-12 h-12" }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="currentColor" opacity="0.3">
-    <path d="M6 17h3l2-4V7H5v6h3l-2 4zm8 0h3l2-4V7h-6v6h3l-2 4z"/>
-  </svg>
-);
-
-const TreeIcon = ({ className = "w-6 h-6" }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <path d="M12 22v-7m0 0l-4-4m4 4l4-4M12 3L8 8h8l-4-5zM6 13h12l-6-5-6 5z"/>
   </svg>
 );
 
@@ -295,14 +277,6 @@ const Footer = () => {
                 className="h-10 w-auto object-contain"
                 onError={(e) => {
                   e.target.style.display = 'none';
-                  e.target.parentElement.innerHTML = `
-                    <div class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center">
-                      <svg class="w-6 h-6 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M6.5 21.5c4-4 8-8 12-12-4 4-8 8-12 12zm0 0c-2-2-2-6 0-8 4-4 10-4 14-2-4 2-10 6-14 10z"/>
-                      </svg>
-                    </div>
-                    <span class="text-xl font-semibold">NatureMark</span>
-                  `;
                 }}
               />
               <span className="text-xl font-semibold">NatureMark</span>
@@ -376,8 +350,8 @@ const Footer = () => {
             © 2025 NatureMark Systems. All rights reserved.
           </p>
           <div className="flex items-center gap-6">
-            <a href="#" className="text-emerald-200/50 hover:text-white text-base transition-colors">Privacy Policy</a>
-            <a href="#" className="text-emerald-200/50 hover:text-white text-base transition-colors">Terms of Service</a>
+            <button onClick={() => setCurrentPage('privacy')} className="text-emerald-200/50 hover:text-white text-base transition-colors">Privacy Policy</button>
+            <button onClick={() => setCurrentPage('terms')} className="text-emerald-200/50 hover:text-white text-base transition-colors">Terms of Service</button>
           </div>
         </div>
       </div>
@@ -457,13 +431,7 @@ const HeroSection = () => {
                   alt="NatureMark" 
                   className="w-16 h-16 object-contain"
                   onError={(e) => {
-                    e.target.parentElement.innerHTML = `
-                      <div class="w-16 h-16 flex items-center justify-center">
-                        <svg class="w-12 h-12 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                          <path d="M6.5 21.5c4-4 8-8 12-12-4 4-8 8-12 12zm0 0c-2-2-2-6 0-8 4-4 10-4 14-2-4 2-10 6-14 10z"/>
-                        </svg>
-                      </div>
-                    `;
+                    e.target.style.display = 'none';
                   }}
                 />
               </div>
@@ -475,9 +443,16 @@ const HeroSection = () => {
               
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-br from-emerald-400/30 to-teal-400/30 rounded-full blur-xl" />
               
-              {/* Central Icon */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-gradient-to-br from-emerald-400 to-teal-400 rounded-3xl flex items-center justify-center shadow-2xl shadow-emerald-400/30 rotate-12">
-                <LeafIcon className="w-16 h-16 text-white -rotate-12" />
+              {/* Central Logo - Replace /images/hero-central-logo.png with your logo */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-70 h-70 flex items-center justify-center">
+                <img 
+                  src="/images/hero-central-logo.svg" 
+                  alt="NatureMark Logo" 
+                  className="w-full h-full object-contain drop-shadow-2xl"
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                  }}
+                />
               </div>
             </div>
           </div>
@@ -530,9 +505,7 @@ const AboutSection = () => {
 
           <div className="relative">
             <div className="aspect-square bg-gradient-to-br from-emerald-100 to-teal-100 rounded-3xl overflow-hidden">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-48 h-48 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-full opacity-20 animate-pulse" />
-              </div>
+              {/* Removed the pulsing circle animation */}
               <img 
                 src="/images/about-illustration.png" 
                 alt="About NatureMark" 
@@ -571,7 +544,9 @@ const ProductsSection = () => {
       tagline: 'Enterprise Carbon Intelligence Platform',
       description: 'Measure, monitor, and manage greenhouse gas emissions across all operations.',
       gradient: 'from-emerald-600 to-emerald-800',
-      features: ['Scope 1, 2 & 3 Tracking', 'AI Analytics', 'ESG Reporting']
+      features: ['Scope 1, 2 & 3 Tracking', 'AI Analytics', 'ESG Reporting'],
+      // Add your background image path here
+      backgroundImage: '/images/carbondesk-product-bg.png'
     },
     {
       id: 'arbortag',
@@ -579,7 +554,9 @@ const ProductsSection = () => {
       tagline: 'Measure. Monitor. Sustain',
       description: 'Track tree plantations and carbon sequestration with computer vision.',
       gradient: 'from-teal-600 to-emerald-700',
-      features: ['Tree Measurement', 'Geo-tagging', 'Carbon Calculation']
+      features: ['Tree Measurement', 'Geo-tagging', 'Carbon Calculation'],
+      // Add your background image path here
+      backgroundImage: '/images/arbortag-product-bg.png'
     }
   ];
 
@@ -600,6 +577,14 @@ const ProductsSection = () => {
               className="group bg-white rounded-3xl overflow-hidden shadow-lg shadow-slate-200/50 hover:shadow-2xl hover:shadow-emerald-900/10 transition-all duration-500"
             >
               <div className={`h-64 bg-gradient-to-br ${product.gradient} relative overflow-hidden`}>
+                {/* Background Image - Add your image at the specified path */}
+                <img 
+                  src={product.backgroundImage}
+                  alt={`${product.name} background`}
+                  className="absolute inset-0 w-full h-full object-cover opacity-30"
+                  onError={(e) => { e.target.style.display = 'none' }}
+                />
+                
                 <div className="absolute inset-0 opacity-20">
                   <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 border-2 border-white rounded-full" />
                   <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 border-2 border-white rounded-full" />
@@ -610,7 +595,7 @@ const ProductsSection = () => {
                     href={product.id === 'sustain360' ? 'https://www.youtube.com/@NatureMarkSystems' : 'https://youtu.be/p0iGDVh6q2o'}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-20 h-20 bg-red-500 rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-2xl shadow-red-500/50"
+                    className="w-20 h-20 bg-red-500 rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-2xl shadow-red-500/50 relative z-10"
                   >
                     <PlayIcon className="w-8 h-8 text-white ml-1" />
                   </a>
@@ -1019,13 +1004,16 @@ const Sustain360Page = () => {
         </div>
         
         <div className="relative max-w-5xl mx-auto px-6 lg:px-8 pt-32 pb-24 text-center w-full">
-          <div className="w-20 h-20 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-8 border border-white/20">
-            <LeafIcon className="w-10 h-10 text-emerald-300" />
+          {/* Sustain360 Hero Icon - Replace /images/sustain360-hero-icon.png with your icon */}
+          <div className="w-50 h-50 flex items-center justify-center mx-auto mb-8">
+            <img 
+              src="/images/sustain360-hero-icon.svg" 
+              alt="CarbonDesk" 
+              className="w-full h-full object-contain"
+              onError={(e) => { e.target.style.display = 'none' }}
+            />
           </div>
-          <h1 className="text-6xl lg:text-7xl font-bold text-white mb-4">
-            CarbonDesk
-          </h1>
-          <p className="text-2xl text-emerald-200 mb-10 max-w-2xl mx-auto">Enterprise Carbon Intelligence Platform</p>
+      
           <div className="flex flex-wrap justify-center gap-4">
             <button
               onClick={() => setCurrentPage('contact')}
@@ -1313,13 +1301,15 @@ const ArborTagPage = () => {
         </div>
         
         <div className="relative max-w-5xl mx-auto px-6 lg:px-8 pt-32 pb-24 text-center w-full">
-          <div className="w-20 h-20 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-8 border border-white/20">
-            <TreeIcon className="w-10 h-10 text-teal-300" />
+          {/* ArborTag Hero Icon - Replace /images/arbortag-hero-icon.png with your icon */}
+          <div className="w-50 h-50 flex items-center justify-center mx-auto mb-10">
+            <img 
+              src="/images/arbortag-hero-icon.svg" 
+              alt="ArborTag" 
+              className="w-full h-full object-contain"
+              onError={(e) => { e.target.style.display = 'none' }}
+            />
           </div>
-          <h1 className="text-6xl lg:text-7xl font-bold text-white mb-4">
-            ArborTag
-          </h1>
-          <p className="text-xl text-teal-200 mb-2">Measure. Monitor. Sustain.</p>
           <p className="text-xl text-white/70 mb-10 max-w-2xl mx-auto">
             The Future of Tree Intelligence
           </p>
@@ -1773,6 +1763,184 @@ const ContactPage = () => {
   );
 };
 
+// Privacy Policy Page
+const PrivacyPage = () => {
+  return (
+    <main className="pt-20">
+      <section className="py-24 bg-gradient-to-br from-emerald-50 to-teal-50">
+        <div className="max-w-4xl mx-auto px-6 lg:px-8">
+          <h1 className="text-5xl lg:text-6xl font-bold text-emerald-900 mb-6">
+            Privacy Policy
+          </h1>
+          <p className="text-xl text-slate-600">
+            Last updated: December 2025
+          </p>
+        </div>
+      </section>
+
+      <section className="py-16">
+        <div className="max-w-4xl mx-auto px-6 lg:px-8 prose prose-lg prose-emerald">
+          <h2 className="text-3xl font-bold text-emerald-900 mb-4">1. Introduction</h2>
+          <p className="text-slate-600 mb-8">
+            NatureMark Systems ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website or use our services, including CarbonDesk and ArborTag.
+          </p>
+
+          <h2 className="text-3xl font-bold text-emerald-900 mb-4">2. Information We Collect</h2>
+          <p className="text-slate-600 mb-4">We may collect information about you in various ways, including:</p>
+          <ul className="text-slate-600 mb-8 space-y-2">
+            <li><strong>Personal Data:</strong> Name, email address, phone number, company name, and other contact information you provide.</li>
+            <li><strong>Usage Data:</strong> Information about how you use our services, including access times, pages viewed, and features used.</li>
+            <li><strong>Device Data:</strong> Information about your device, including IP address, browser type, and operating system.</li>
+            <li><strong>Location Data:</strong> Geographic location data when using our ArborTag service for tree monitoring.</li>
+          </ul>
+
+          <h2 className="text-3xl font-bold text-emerald-900 mb-4">3. How We Use Your Information</h2>
+          <p className="text-slate-600 mb-4">We use the information we collect to:</p>
+          <ul className="text-slate-600 mb-8 space-y-2">
+            <li>Provide, operate, and maintain our services</li>
+            <li>Improve, personalize, and expand our services</li>
+            <li>Communicate with you about updates, support, and marketing</li>
+            <li>Process transactions and send related information</li>
+            <li>Generate carbon footprint reports and sustainability analytics</li>
+            <li>Comply with legal obligations</li>
+          </ul>
+
+          <h2 className="text-3xl font-bold text-emerald-900 mb-4">4. Data Sharing and Disclosure</h2>
+          <p className="text-slate-600 mb-8">
+            We do not sell your personal information. We may share your information with third-party service providers who assist us in operating our services, conducting our business, or serving our users. We may also disclose your information when required by law or to protect our rights.
+          </p>
+
+          <h2 className="text-3xl font-bold text-emerald-900 mb-4">5. Data Security</h2>
+          <p className="text-slate-600 mb-8">
+            We implement appropriate technical and organizational security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. However, no method of transmission over the Internet or electronic storage is 100% secure.
+          </p>
+
+          <h2 className="text-3xl font-bold text-emerald-900 mb-4">6. Data Retention</h2>
+          <p className="text-slate-600 mb-8">
+            We retain your personal information for as long as necessary to fulfill the purposes outlined in this Privacy Policy, unless a longer retention period is required or permitted by law.
+          </p>
+
+          <h2 className="text-3xl font-bold text-emerald-900 mb-4">7. Your Rights</h2>
+          <p className="text-slate-600 mb-4">Depending on your location, you may have the right to:</p>
+          <ul className="text-slate-600 mb-8 space-y-2">
+            <li>Access and receive a copy of your personal data</li>
+            <li>Rectify or update your personal data</li>
+            <li>Request deletion of your personal data</li>
+            <li>Object to or restrict processing of your personal data</li>
+            <li>Data portability</li>
+          </ul>
+
+          <h2 className="text-3xl font-bold text-emerald-900 mb-4">8. Contact Us</h2>
+          <p className="text-slate-600 mb-8">
+            If you have questions about this Privacy Policy or our privacy practices, please contact us at:
+            <br /><br />
+            <strong>Email:</strong> naturemarksystems@gmail.com<br />
+            <strong>Phone:</strong> +91 9833363372
+          </p>
+        </div>
+      </section>
+    </main>
+  );
+};
+
+// Terms of Service Page
+const TermsPage = () => {
+  return (
+    <main className="pt-20">
+      <section className="py-24 bg-gradient-to-br from-emerald-50 to-teal-50">
+        <div className="max-w-4xl mx-auto px-6 lg:px-8">
+          <h1 className="text-5xl lg:text-6xl font-bold text-emerald-900 mb-6">
+            Terms of Service
+          </h1>
+          <p className="text-xl text-slate-600">
+            Last updated: December 2025
+          </p>
+        </div>
+      </section>
+
+      <section className="py-16">
+        <div className="max-w-4xl mx-auto px-6 lg:px-8 prose prose-lg prose-emerald">
+          <h2 className="text-3xl font-bold text-emerald-900 mb-4">1. Acceptance of Terms</h2>
+          <p className="text-slate-600 mb-8">
+            By accessing or using the services provided by NatureMark Systems, including CarbonDesk and ArborTag ("Services"), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our Services.
+          </p>
+
+          <h2 className="text-3xl font-bold text-emerald-900 mb-4">2. Description of Services</h2>
+          <p className="text-slate-600 mb-4">NatureMark Systems provides:</p>
+          <ul className="text-slate-600 mb-8 space-y-2">
+            <li><strong>CarbonDesk:</strong> An enterprise carbon intelligence platform for measuring, monitoring, and managing greenhouse gas emissions.</li>
+            <li><strong>ArborTag:</strong> An AI-driven tree monitoring system for plantation tracking and carbon sequestration measurement.</li>
+          </ul>
+
+          <h2 className="text-3xl font-bold text-emerald-900 mb-4">3. User Accounts</h2>
+          <p className="text-slate-600 mb-8">
+            To access certain features of our Services, you may be required to create an account. You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account. You agree to notify us immediately of any unauthorized use of your account.
+          </p>
+
+          <h2 className="text-3xl font-bold text-emerald-900 mb-4">4. Acceptable Use</h2>
+          <p className="text-slate-600 mb-4">You agree not to:</p>
+          <ul className="text-slate-600 mb-8 space-y-2">
+            <li>Use the Services for any unlawful purpose</li>
+            <li>Attempt to gain unauthorized access to our systems</li>
+            <li>Interfere with or disrupt the Services</li>
+            <li>Upload malicious code or content</li>
+            <li>Violate any applicable laws or regulations</li>
+            <li>Infringe upon the intellectual property rights of others</li>
+          </ul>
+
+          <h2 className="text-3xl font-bold text-emerald-900 mb-4">5. Intellectual Property</h2>
+          <p className="text-slate-600 mb-8">
+            All content, features, and functionality of our Services, including but not limited to text, graphics, logos, software, and data, are the exclusive property of NatureMark Systems and are protected by intellectual property laws. You may not reproduce, distribute, or create derivative works without our express written permission.
+          </p>
+
+          <h2 className="text-3xl font-bold text-emerald-900 mb-4">6. Data and Privacy</h2>
+          <p className="text-slate-600 mb-8">
+            Your use of our Services is also governed by our Privacy Policy. By using our Services, you consent to the collection and use of your information as described in our Privacy Policy.
+          </p>
+
+          <h2 className="text-3xl font-bold text-emerald-900 mb-4">7. Disclaimer of Warranties</h2>
+          <p className="text-slate-600 mb-8">
+            Our Services are provided "as is" and "as available" without warranties of any kind, either express or implied. We do not warrant that our Services will be uninterrupted, error-free, or secure. Carbon calculations and emission data are provided based on industry-standard methodologies but may vary based on actual conditions.
+          </p>
+
+          <h2 className="text-3xl font-bold text-emerald-900 mb-4">8. Limitation of Liability</h2>
+          <p className="text-slate-600 mb-8">
+            To the maximum extent permitted by law, NatureMark Systems shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising out of or relating to your use of our Services.
+          </p>
+
+          <h2 className="text-3xl font-bold text-emerald-900 mb-4">9. Indemnification</h2>
+          <p className="text-slate-600 mb-8">
+            You agree to indemnify and hold harmless NatureMark Systems and its officers, directors, employees, and agents from any claims, damages, losses, or expenses arising out of your use of our Services or violation of these Terms.
+          </p>
+
+          <h2 className="text-3xl font-bold text-emerald-900 mb-4">10. Termination</h2>
+          <p className="text-slate-600 mb-8">
+            We reserve the right to suspend or terminate your access to our Services at any time, with or without cause, and with or without notice. Upon termination, your right to use our Services will immediately cease.
+          </p>
+
+          <h2 className="text-3xl font-bold text-emerald-900 mb-4">11. Governing Law</h2>
+          <p className="text-slate-600 mb-8">
+            These Terms shall be governed by and construed in accordance with the laws of India. Any disputes arising from these Terms shall be subject to the exclusive jurisdiction of the courts in Karnataka, India.
+          </p>
+
+          <h2 className="text-3xl font-bold text-emerald-900 mb-4">12. Changes to Terms</h2>
+          <p className="text-slate-600 mb-8">
+            We reserve the right to modify these Terms at any time. We will notify users of any material changes by posting the updated Terms on our website. Your continued use of our Services after such changes constitutes acceptance of the new Terms.
+          </p>
+
+          <h2 className="text-3xl font-bold text-emerald-900 mb-4">13. Contact Us</h2>
+          <p className="text-slate-600 mb-8">
+            If you have questions about these Terms of Service, please contact us at:
+            <br /><br />
+            <strong>Email:</strong> naturemarksystems@gmail.com<br />
+            <strong>Phone:</strong> +91 9833363372
+          </p>
+        </div>
+      </section>
+    </main>
+  );
+};
+
 // ============================================
 // MAIN APP
 // ============================================
@@ -1793,6 +1961,10 @@ export default function App() {
         return <ArborTagPage />;
       case 'contact':
         return <ContactPage />;
+      case 'privacy':
+        return <PrivacyPage />;
+      case 'terms':
+        return <TermsPage />;
       default:
         return <HomePage />;
     }
