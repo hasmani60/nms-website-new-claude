@@ -38,11 +38,11 @@ const teamMembers = [
 ];
 
 const clientsData = [
-  { id: 1, name: 'Tata Motors', logo: '/images/client-1.png', person: 'Rajesh Kumar', role: 'Sustainability Head', testimonial: 'NatureMark Systems has been instrumental in helping us track and verify our tree plantation initiatives across multiple sites.' },
-  { id: 2, name: 'Infosys', logo: '/images/client-2.png', person: 'Priya Sharma', role: 'ESG Director', testimonial: 'CarbonDesk transformed how we approach carbon accounting. The platform made our BRSR reporting seamless.' },
-  { id: 3, name: 'Mahindra Group', logo: '/images/client-3.png', person: 'Vikram Mehta', role: 'Chief Sustainability Officer', testimonial: 'The team at NatureMark truly understands the challenges of enterprise sustainability.' },
-  { id: 4, name: 'Wipro', logo: '/images/client-4.png', person: 'Anita Desai', role: 'Environmental Compliance Manager', testimonial: 'Working with NatureMark has accelerated our Net Zero journey significantly.' },
-  { id: 5, name: 'L&T', logo: '/images/client-5.png', person: 'Suresh Nair', role: 'VP Operations', testimonial: 'ArborTag gave us complete visibility into our afforestation projects.' },
+  { id: 1, name: 'Yashaswi Marine Ingredients', logo: '/images/client-1.png', person: 'Uday Kumar Salian', role: 'Managing Partner', testimonial: 'NatureMark Systems helped us clearly understand our carbon footprint across the entire production chain. Their insights were actionable, accurate, and easy to implement. A reliable partner for sustainable marine operations.' },
+  { id: 2, name: 'West Coast Foods', logo: '/images/client-2.png', person: 'Ashfaq ', role: 'Director', testimonial: 'NatureMark supported our CSR sustainability initiatives with clear data and verified environmental tracking. Their tools made monitoring simple and transparent. Highly committed and professional team.' },
+  { id: 3, name: 'Deraiya Group', logo: '/images/client-3.png', person: 'Irshad Vadgama', role: 'Director', testimonial: 'NatureMark Systems delivered precise carbon insights that aligned with our long-term sustainability goals. Their tech-driven approach made the entire process smooth and impactful. A valuable partner we trust.' },
+  { id: 4, name: 'KGN Ice and Cold Storage', logo: '/images/client-4.png', person: 'Abdul Kadar', role: 'Partner', testimonial: 'Our carbon assessment was completed quickly and with absolute clarity. CarbonDesk helped us identify energy inefficiencies and reduce our overall footprint. Excellent support and transparent reporting.' },
+  { id: 5, name: 'Hejazi Brand (Seafood Exporter)', logo: '/images/client-5.png', person: 'Faizan Nagani', role: 'Plant Manager', testimonial: 'The team at NatureMark gave us complete clarity on our operational emissions and improvement areas. Their sustainability tools helped streamline data and strengthen our ESG communication. Truly professional and efficient service.' },
 ];
 
 const faqData = [
@@ -62,7 +62,7 @@ const sustain360Problems = [
 const sustain360Results = [
   'Full carbon footprint visibility in weeks',
   'Data-backed roadmap for emission cuts',
-  'Streamlined BRSR and ESG reporting',
+  'Streamlined ESG reporting',
   'Real-time progress tracking'
 ];
 
@@ -76,7 +76,7 @@ const arbortagProblems = [
 const arbortagResults = [
   'Complete plantation inventory digitized in days',
   'Accurate carbon sequestration data with AI precision',
-  'Tamper-proof data with blockchain logging',
+  'Tamper-proof data — ensuring every record remains authentic and verifiable',
   'Integrated ESG dashboards for audit-ready reports'
 ];
 
@@ -92,7 +92,7 @@ const arbortagAdvantages = [
   'Zero manual dependency — completely automated verification',
   'High accuracy using AI + GIS synergy',
   'Scalable from small plantations to large urban forests',
-  'Tamper-proof data — every tag, timestamp, and image is blockchain-logged',
+  'Tamper-proof data — every tag, timestamp, and image is locked and protected against any form of tampering',
   'Integrated ESG dashboards for audit-ready sustainability reports'
 ];
 
@@ -384,7 +384,7 @@ const HeroSection = () => {
           <div className="text-white">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full mb-8 backdrop-blur-sm">
               <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-              <span className="text-emerald-200 text-lg font-medium">Sustainability Technology</span>
+              <span className="text-emerald-100 text-lg font-medium">Green Tech Solutions</span>
             </div>
             
             <h1 className="text-5xl lg:text-7xl font-bold leading-tight mb-6">
@@ -433,7 +433,7 @@ const HeroSection = () => {
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-br from-emerald-400/30 to-teal-400/30 rounded-full blur-xl" />
               
               {/* Central Logo - Replace /images/hero-central-logo.png with your logo */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-70 h-70 flex items-center justify-center">
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-160 h-160 flex items-center justify-center">
                 <img 
                   src="/images/hero-central-logo.svg" 
                   alt="NatureMark Logo" 
@@ -574,7 +574,7 @@ const ProductsSection = () => {
                   onError={(e) => { e.target.style.display = 'none' }}
                 />
                 
-                <div className="absolute inset-0 opacity-20">
+                <div className="absolute inset-0 opacity-0">
                   <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 border-2 border-white rounded-full" />
                   <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 border-2 border-white rounded-full" />
                 </div>
@@ -877,7 +877,7 @@ const ProductsPage = () => {
         <div className="max-w-7xl mx-auto px-6 lg:px-8 space-y-24">
           {/* Sustain360 */}
           <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div className="aspect-video bg-gradient-to-br from-emerald-100 to-teal-100 rounded-3xl overflow-hidden">
+            <div className="aspect-video bg-white rounded-3xl overflow-hidden">
               <img src="/images/sustain360-preview.svg" alt="Sustain360" className="w-full h-full object-cover" onError={(e) => { e.target.style.display = 'none' }} />
             </div>
             <div>
@@ -907,11 +907,11 @@ const ProductsPage = () => {
 
           {/* ArborTag */}
           <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div className="lg:order-2 aspect-video bg-gradient-to-br from-teal-100 to-emerald-100 rounded-3xl overflow-hidden">
-              <img src="/images/arbortag-preview.png" alt="ArborTag" className="w-full h-full object-cover" onError={(e) => { e.target.style.display = 'none' }} />
+            <div className="lg:order-2 aspect-video bg-white rounded-3xl overflow-hidden">
+              <img src="/images/arbortag-preview.svg" alt="ArborTag" className="w-full h-full object-cover" onError={(e) => { e.target.style.display = 'none' }} />
             </div>
             <div className="lg:order-1">
-              <span className="inline-block px-3 py-1 bg-teal-100 text-teal-700 rounded-full text-base mb-4">Tree Intelligence</span>
+              <span className="inline-block px-3 py-1 bg-teal-100 text-teal-700 rounded-full text-base mb-4">AI-Powered Tree Monitoring</span>
               <h2 className="text-5xl font-bold text-emerald-900 mb-4">ArborTag</h2>
               <p className="text-xl text-teal-600 mb-4">Measure. Monitor. Sustain</p>
               <p className="text-slate-600 mb-6 leading-relaxed">
@@ -1299,7 +1299,7 @@ const ArborTagPage = () => {
               onError={(e) => { e.target.style.display = 'none' }}
             />
           </div>
-          <p className="text-xl text-white/70 mb-10 max-w-2xl mx-auto">
+          <p className="text-3xl text-white/100 mb-10 max-w-2xl mx-auto">
             The Future of Tree Intelligence
           </p>
           <div className="flex flex-wrap justify-center gap-4">
