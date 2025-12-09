@@ -15,25 +15,25 @@ const teamMembers = [
     name: 'Ali Abbas Khan',
     role: 'Co-Founder & CTO',
     quote: "Engineering is about finding elegant solutions to complex problems — and that's exactly what we do at NMS.",
-    image: '/images/team-ali-abbas.png'
+    image: '/images/AliAbbasKhan.png'
   },
   {
     name: 'Shivakiran Alva',
     role: 'Co-Founder & COO',
     quote: 'Technology is only meaningful when it simplifies the path to doing good.',
-    image: '/images/team-shivakiran.png'
+    image: '/images/ShivakiranAlva.png'
   },
   {
     name: 'Mohamed Saif Hasmani',
     role: 'Co-Founder & CEO',
     quote: 'Sustainability should not be a burden for businesses — it should be their biggest strength.',
-    image: '/images/team-saif.png'
+    image: '/images/MohamedSaifHasmani.png'
   },
   {
     name: 'Deepak Pinto',
     role: 'Co-Founder & Chief Analytics Officer',
     quote: "Data tells the story of our planet — our job is to make sure it's understood.",
-    image: '/images/team-deepak.png'
+    image: '/images/DeepakPinto.png'
   }
 ];
 
@@ -109,7 +109,7 @@ const arbortagUseCases = [
 // ============================================
 const DEMO_URLS = {
   main: 'https://carbondesk-live.vercel.app/',
-  sustain360: 'https://carbondesk-live.vercel.app/',
+  sustain360: 'https://www.youtube.com/watch?v=QR6Gamr6J5Q',
   arbortag: 'https://youtu.be/p0iGDVh6q2o'
 };
 
@@ -643,7 +643,7 @@ const ProductsSection = () => {
                 
                 <div className="absolute inset-0 flex items-center justify-center">
                   <a 
-                    href={product.id === 'sustain360' ? 'https://youtu.be/QR6Gamr6J5Q?si=SFXATwbmPxFuaVeo' : 'https://youtu.be/p0iGDVh6q2o'}
+                    href={product.id === 'sustain360' ? 'https://www.youtube.com/watch?v=QR6Gamr6J5Q' : 'https://youtu.be/p0iGDVh6q2o'}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-16 h-16 sm:w-20 sm:h-20 bg-red-500 rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-2xl shadow-red-500/50 relative z-10"
@@ -1081,7 +1081,7 @@ const Sustain360Page = () => {
           <div className="relative aspect-video rounded-2xl overflow-hidden shadow-2xl shadow-emerald-900/10 border border-slate-200">
             <iframe
               className="absolute inset-0 w-full h-full"
-              src="https://youtu.be/QR6Gamr6J5Q?si=SFXATwbmPxFuaVeo"
+              src="https://www.youtube.com/embed/QR6Gamr6J5Q?si=a4gY3hGrIBMtmoLH"
               title="CarbonDesk Product Video"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -1639,13 +1639,93 @@ const ArborTagPage = () => {
 // Contact Page
 const ContactPage = () => {
   const [openFaq, setOpenFaq] = useState(null);
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    company: '',
+    email: '',
+    phone: '',
+    needs: []
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(null);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleCheckboxChange = (value) => {
+    setFormData(prev => ({
+      ...prev,
+      needs: prev.needs.includes(value)
+        ? prev.needs.filter(item => item !== value)
+        : [...prev.needs, value]
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus(null);
+
+    try {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          access_key: 'dd647483-4185-4b0a-88ca-d238b13497cc', // Get this from web3forms.com
+          name: `${formData.firstName} ${formData.lastName}`,
+          email: formData.email,
+          phone: formData.phone,
+          company: formData.company,
+          needs: formData.needs.join(', '),
+          subject: `New Contact Form Submission from ${formData.company}`,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setSubmitStatus('success');
+        setFormData({
+          firstName: '',
+          lastName: '',
+          company: '',
+          email: '',
+          phone: '',
+          needs: []
+        });
+        
+        // Reset success message after 5 seconds
+        setTimeout(() => setSubmitStatus(null), 5000);
+      } else {
+        setSubmitStatus('error');
+      }
+    } catch (error) {
+      console.error('Form submission error:', error);
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const needsOptions = [
+    'Need clarity on Scope 1, 2, and 3 emissions',
+    'Looking to adhere to global sustainability standards',
+    'Need assistance mapping material topics to GRI',
+    'Considering purchasing carbon credits',
+    'Want to optimize operational efficiency'
+  ];
 
   return (
     <main className="pt-16 sm:pt-20">
       <section className="py-16 sm:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 sm:gap-16">
-            {/* Info */}
+            {/* Info Section - Keep existing code */}
             <div>
               <span className="text-emerald-600 font-medium text-sm sm:text-base uppercase tracking-wider">Contact Us</span>
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-emerald-900 mt-3 sm:mt-4 mb-3 sm:mb-4">
@@ -1671,7 +1751,7 @@ const ContactPage = () => {
                 ))}
               </ul>
 
-              {/* FAQ */}
+              {/* FAQ Section - Keep existing code */}
               <div>
                 <h3 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-emerald-900 mb-4 sm:mb-6">
                   Frequently Asked Questions
@@ -1697,13 +1777,25 @@ const ContactPage = () => {
               </div>
             </div>
 
-            {/* Form */}
+            {/* Updated Form Section */}
             <div className="bg-white p-6 sm:p-8 lg:p-10 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100">
               <p className="text-slate-600 mb-6 sm:mb-8 text-sm sm:text-base">
                 Fill out the form and a sales or support expert will be in touch right away.
               </p>
 
-              <form className="space-y-5 sm:space-y-6">
+              {/* Success/Error Messages */}
+              {submitStatus === 'success' && (
+                <div className="mb-6 p-4 bg-emerald-50 border border-emerald-200 rounded-xl">
+                  <p className="text-emerald-800 font-medium">✓ Thank you! We'll be in touch soon.</p>
+                </div>
+              )}
+              {submitStatus === 'error' && (
+                <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
+                  <p className="text-red-800 font-medium">× Something went wrong. Please try again.</p>
+                </div>
+              )}
+
+              <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-base sm:text-lg font-medium text-slate-700 mb-2">
@@ -1711,6 +1803,10 @@ const ContactPage = () => {
                     </label>
                     <input
                       type="text"
+                      name="firstName"
+                      value={formData.firstName}
+                      onChange={handleInputChange}
+                      required
                       className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all text-sm sm:text-base"
                       placeholder="John"
                     />
@@ -1721,6 +1817,10 @@ const ContactPage = () => {
                     </label>
                     <input
                       type="text"
+                      name="lastName"
+                      value={formData.lastName}
+                      onChange={handleInputChange}
+                      required
                       className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all text-sm sm:text-base"
                       placeholder="Doe"
                     />
@@ -1733,6 +1833,10 @@ const ContactPage = () => {
                   </label>
                   <input
                     type="text"
+                    name="company"
+                    value={formData.company}
+                    onChange={handleInputChange}
+                    required
                     className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all text-sm sm:text-base"
                     placeholder="Your Company"
                   />
@@ -1744,6 +1848,10 @@ const ContactPage = () => {
                   </label>
                   <input
                     type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required
                     className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all text-sm sm:text-base"
                     placeholder="john@company.com"
                   />
@@ -1755,6 +1863,10 @@ const ContactPage = () => {
                   </label>
                   <input
                     type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    required
                     className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all text-sm sm:text-base"
                     placeholder="+91 98333 63372"
                   />
@@ -1765,16 +1877,12 @@ const ContactPage = () => {
                     How can we help you?
                   </label>
                   <div className="space-y-3">
-                    {[
-                      'Need clarity on Scope 1, 2, and 3 emissions',
-                      'Looking to adhere to global sustainability standards',
-                      'Need assistance mapping material topics to GRI',
-                      'Considering purchasing carbon credits',
-                      'Want to optimize operational efficiency'
-                    ].map((item) => (
+                    {needsOptions.map((item) => (
                       <label key={item} className="flex items-start gap-3 cursor-pointer">
                         <input
                           type="checkbox"
+                          checked={formData.needs.includes(item)}
+                          onChange={() => handleCheckboxChange(item)}
                           className="w-5 h-5 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 mt-0.5 flex-shrink-0"
                         />
                         <span className="text-sm sm:text-base text-slate-600">{item}</span>
@@ -1785,9 +1893,12 @@ const ContactPage = () => {
 
                 <button
                   type="submit"
-                  className="w-full py-3 sm:py-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-emerald-500/30 transform hover:-translate-y-0.5 transition-all text-base sm:text-lg"
+                  disabled={isSubmitting}
+                  className={`w-full py-3 sm:py-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-emerald-500/30 transform hover:-translate-y-0.5 transition-all text-base sm:text-lg ${
+                    isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
                 >
-                  Submit
+                  {isSubmitting ? 'Submitting...' : 'Submit'}
                 </button>
               </form>
             </div>
